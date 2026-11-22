@@ -7,7 +7,7 @@ import { animations } from 'styles';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import { formatNumber } from 'lib/intl';
-import { isSynchronized } from 'selectors';
+import { isCoreConnected, isSynchronized } from 'selectors';
 import checkIcon from 'icons/check.svg';
 import syncingIcon from 'icons/syncing.svg';
 
@@ -19,8 +19,20 @@ const SpinningIcon = styled(Icon)({
   animation: `${animations.spin} 2s linear infinite`,
 });
 
-export default function SyncStatus() {
+export default function SyncStatus({ badge = false }) {
   const synchronized = useSelector(isSynchronized);
+  const connected = useSelector(isCoreConnected);
+  const progress = useSelector((state) => state.core.systemInfo?.syncing?.progress);
+  if (badge) {
+    return (
+      <Tooltip.Trigger tooltip={connected && !synchronized ? <SyncTooltip /> : undefined}>
+        <div className="sync-status" tabIndex={0} role="status">
+          {connected && !synchronized ? <SpinningIcon icon={syncingIcon} /> : <Icon className={connected ? 'synchronized-icon' : undefined} icon={connected ? checkIcon : syncingIcon} />}
+          <span>{!connected ? __('Waiting for network') : synchronized ? __('Synchronized') : `${__('Synchronizing')}${progress != null ? ` ${progress}%` : '…'}`}</span>
+        </div>
+      </Tooltip.Trigger>
+    );
+  }
   return synchronized ? (
     <Tooltip.Trigger tooltip={__('Synchronized')}>
       <StatusIcon>

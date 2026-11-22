@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import Color from 'color';
+import { mapX } from './mapProjection';
 
 /**
  * The point/pillar on the globe
@@ -11,10 +13,14 @@ export default class Point {
     this.lat = lat;
     this.lng = lng;
     this.params = params || {};
+    const width = this.params.mapLayout
+      ? Math.max(2, 0.4 * this.params.peerConnections)
+      : 0.25 * this.params.peerConnections;
+    const height = (10 + 2 * this.params.peerConnections) * (this.params.mapLayout ? 1.5 : 1);
     const geometry = new THREE.BoxGeometry(
-      0.25 * this.params.peerConnections,
-      10 + 2 * this.params.peerConnections,
-      0.25 * this.params.peerConnections
+      width,
+      height,
+      width
     );
     this.pillar = new THREE.Mesh(geometry);
 
@@ -27,6 +33,10 @@ export default class Point {
     this.pillar.position.y = 125 * Math.cos(phi);
     this.pillar.position.z = 125 * Math.sin(phi) * Math.sin(theta);
     this.pillar.rotation.set(0.0, -lonRad, latRad - Math.PI * 0.5);
+    if (this.params.mapLayout) {
+      this.pillar.position.set(mapX(lng), geometry.parameters.height / 2, -lat * 2);
+      this.pillar.rotation.set(0, 0, 0);
+    }
     this.pillar.name = params.name || 'Not Found';
 
     let color = params.color || '#44EB08';
@@ -40,6 +50,10 @@ export default class Point {
    * @memberof Point
    */
   setColor(hex) {
-    this.pillar.material.color.set(hex);
+    const color = Color(hex);
+    this.pillar.material.color.set(color.hex());
+    this.pillar.material.opacity = color.alpha();
+    this.pillar.material.transparent = true;
+    this.pillar.material.depthWrite = color.alpha() === 1;
   }
 }

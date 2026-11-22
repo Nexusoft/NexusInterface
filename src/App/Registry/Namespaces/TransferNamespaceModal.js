@@ -1,0 +1,96 @@
+import Button from 'components/Button';
+import RegistryModalHeader from '../RegistryModalHeader';
+import styled from '@emotion/styled';
+
+import Form from 'components/Form';
+import ControlledModal from 'components/ControlledModal';
+import FormField from 'components/FormField';
+import Spinner from 'components/Spinner';
+import { formSubmit, required } from 'lib/form';
+import { confirmPin, openSuccessDialog } from 'lib/dialog';
+import { refreshNamespaces } from 'lib/user';
+import { callAPI } from 'lib/api';
+import { userIdRegex } from 'consts/misc';
+
+__ = __context('TransferNamespace');
+
+const Namespace = styled.span(({ theme }) => ({
+  color: theme.foreground,
+}));
+
+const initialValues = {
+  recipient: '',
+};
+
+export default function TransferNamespaceModal({ namespace }) {
+  return (
+    <ControlledModal maxWidth={600}>
+      {(closeModal) => (
+        <>
+          <RegistryModalHeader section="Namespaces">
+            {__('Transfer namespace')}
+          </RegistryModalHeader>
+          <ControlledModal.Body>
+            <Form
+              name="transfer-namespace"
+              initialValues={initialValues}
+              onSubmit={formSubmit({
+                submit: async ({ recipient }) => {
+                  const pin = await confirmPin();
+
+                  const params = { pin, address: namespace.address };
+                  if (userIdRegex.test(recipient)) {
+                    params.destination = recipient;
+                  } else {
+                    params.username = recipient;
+                  }
+
+                  if (pin) {
+                    return await callAPI('names/transfer/namespace', params);
+                  }
+                },
+                onSuccess: async (result) => {
+                  if (!result) return; // Submission was cancelled
+                  refreshNamespaces();
+                  closeModal();
+                  openSuccessDialog({
+                    message: __('Namespace has been transferred'),
+                  });
+                },
+                errorMessage: __('Error transferring namespace'),
+              })}
+            >
+              <FormField label={__('Namespace')}>
+                <Namespace>{namespace.namespace}</Namespace>
+              </FormField>
+
+              <FormField connectLabel label={__('Transfer to')}>
+                <Form.TextField
+                  name="recipient"
+                  autoFocus
+                  placeholder={__('Recipient username or user ID')}
+                  validate={required()}
+                />
+              </FormField>
+
+              <div className="modal-actions"><Button type="button" skin="primary" onClick={closeModal}>{__('Cancel')}</Button><Form.SubmitButton skin="filled-primary">
+                {({ submitting }) =>
+                  submitting ? (
+                    <span>
+                      <Spinner className="mr0_4" />
+                      <span className="v-align">
+                        {__('Transferring namespace')}...
+                      </span>
+                    </span>
+                  ) : (
+                    __('Transfer namespace')
+                  )
+                }
+              </Form.SubmitButton></div>
+            </Form>
+          </ControlledModal.Body>
+        </>
+      )}
+    </ControlledModal>
+  );
+}

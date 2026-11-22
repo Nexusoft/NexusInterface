@@ -27,7 +27,11 @@ const OverlayComponent = styled.div(
   },
   ({ zPriority = 0 }) => ({
     zIndex: zIndex.overlays + zPriority,
-  })
+  }),
+  ({ contained }) => contained && {
+    position: 'absolute',
+    contain: 'layout paint',
+  }
 );
 
 const OverlayBackground = styled.div(
@@ -42,7 +46,9 @@ const OverlayBackground = styled.div(
   },
   ({ dimmed }) =>
     dimmed && {
-      background: 'rgba(0,0,0,0.5)',
+      background: 'rgba(0, 0, 0, 0.65)',
+      backdropFilter: 'blur(6px)',
+      WebkitBackdropFilter: 'blur(6px)',
     }
 );
 
@@ -52,28 +58,28 @@ export default function Overlay({
   backgroundRef,
   children,
   zPriority,
+  portalContainer,
   ...rest
 }) {
   const nodeRef = useRef(document.createElement('div'));
 
   useEffect(() => {
-    const body = document.getElementsByTagName('body')[0];
-    body.appendChild(nodeRef.current);
+    const container = (portalContainer && document.querySelector(portalContainer)) || document.body;
+    container.appendChild(nodeRef.current);
 
     return () => {
-      body.removeChild(nodeRef.current);
+      container.removeChild(nodeRef.current);
     };
-  }, []);
+  }, [portalContainer]);
 
   if (!nodeRef.current) return null;
 
   return ReactDOM.createPortal(
-    <OverlayComponent {...rest}>
+    <OverlayComponent contained={!!portalContainer} zPriority={zPriority} {...rest}>
       <OverlayBackground
         ref={backgroundRef}
         dimmed={dimBackground}
         onClick={onBackgroundClick}
-        zPriority={zPriority}
       />
       {children}
     </OverlayComponent>,

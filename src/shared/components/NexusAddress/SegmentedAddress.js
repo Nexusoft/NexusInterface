@@ -83,6 +83,7 @@ export default function SegmentedAddress({
   address,
   label,
   copyable = true,
+  continuous = false,
   ...rest
 }) {
   const addressRef = useRef();
@@ -100,7 +101,7 @@ export default function SegmentedAddress({
           copyable={copyable}
           onClick={copyable ? () => copyAddress(address) : undefined}
         >
-          {renderAddress(address)}
+          {continuous ? address : renderAddress(address)}
         </Address>
       </Tooltip.Trigger>
     </SegmentedAddressComponent>

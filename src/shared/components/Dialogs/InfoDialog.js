@@ -12,9 +12,9 @@ import Dialog from './Dialog';
 __ = __context('InfoDialog');
 
 const InfoMark = styled(Dialog.Icon)(({ theme }) => ({
-  fontSize: 44,
+  fontSize: theme.modern ? 28 : 44,
   color: theme.mixer(0.75),
-  borderWidth: 3,
+  borderWidth: theme.modern ? 1 : 3,
   filter: `drop-shadow(0 0 5px ${color.fade(theme.mixer(0.75), 0.5)})`,
 }));
 

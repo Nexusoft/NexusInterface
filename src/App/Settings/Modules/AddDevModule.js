@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { fade } from 'utils/color';
 import { ipcRenderer } from 'electron';
 
 import Button from 'components/Button';
@@ -11,6 +12,12 @@ const Wrapper = styled.div(({ theme }) => ({
   color: theme.mixer(0.75),
   textAlign: 'center',
   fontSize: '.9em',
+  ...(theme.modern && {
+    padding: '14px 18px', margin: '0 0 16px', borderRadius: 12,
+    border: `1px solid ${fade(theme.primary, 0.82)}`, background: fade(theme.background, 0.25),
+    fontSize: 12, lineHeight: 1.6,
+    'button': { height: 34, padding: '0 12px', borderRadius: 8, fontSize: 12 },
+  }),
 }));
 
 async function handleClick() {

@@ -2,6 +2,8 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
+import Group from '../SettingsGroup';
 import { shell } from 'electron';
 
 // Internal
@@ -35,6 +37,7 @@ const FailedModule = styled.div(({ theme }) => ({
 }));
 
 export default function SettingsModules() {
+  const { modern } = useTheme();
   const modules = useSelector((state) => state.modules);
   const failedModules = useSelector((state) => state.failedModules);
   const devMode = useSelector((state) => state.settings.devMode);
@@ -48,7 +51,8 @@ export default function SettingsModules() {
     <>
       <AddModule />
       {devMode && <AddDevModule />}
-      <SectionSeparator label={__('Installed modules')} />
+      <Group title={__('Installed modules')}>
+      {!modern && <SectionSeparator label={__('Installed modules')} />}
       {moduleList.map((module, i) => (
         <Module
           key={module.info.name}
@@ -79,6 +83,7 @@ export default function SettingsModules() {
           <em>{__('No modules have been installed')}</em>
         </div>
       )}
+      </Group>
       <FeaturedModules />
     </>
   );

@@ -36,6 +36,7 @@ export const defaultSettings = {
   fakeTransactions: false,
   overviewDisplay: 'standard',
   hideOverviewBalances: false,
+  autoHideNavigation: false,
   displayFiatBalance: false,
 
   // Core
@@ -68,6 +69,7 @@ export const defaultSettings = {
 
   // Style
   renderGlobe: true,
+  modernOverviewLayout: 'map',
   addressStyle: 'segmented',
 
   // Modules
@@ -110,11 +112,11 @@ export function loadSettingsFromFile() {
   let userSettings = readSettings();
   let changed = false;
 
-  // Enable lite mode for new users
+  // Keep startup lightweight while new users choose their mode during setup.
   if (!userSettings) {
     userSettings = {
       liteMode: true,
-      liteModeNoticeDisabled: true,
+      liteModeNoticeDisabled: false,
     };
     changed = true;
   }

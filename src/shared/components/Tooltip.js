@@ -17,6 +17,8 @@ import styled from '@emotion/styled';
 // Internal
 import { arrowStyles } from 'components/Arrow';
 import { timing, animations, zIndex } from 'styles';
+import { fade, mix } from 'utils/color';
+import themeStyles from 'utils/themeStyles';
 
 const spacing = 10;
 const arrowPadding = 15;
@@ -92,62 +94,109 @@ const arrowAligning = (position, align) => {
   }
 };
 
-const Tooltip = styled.div(
-  {
-    whiteSpace: 'pre-wrap',
-    wordBreak: 'break-word',
-    width: 'max-content',
-    borderRadius: 4,
-    boxShadow: '0 0 8px rgba(0,0,0,.7)',
-    fontSize: 15,
-    padding: '.4em .8em',
-    animation: `${animations.fadeIn} ${timing.normal} ease-out`,
-    '&::before': {
-      content: '""',
-      position: 'absolute',
-    },
-  },
-  ({ maxWidth }) => ({
-    maxWidth: maxWidth || 300,
-  }),
-  ({ skin, theme }) => {
-    switch (skin) {
-      case 'default':
-        return {
-          background: theme.raise(theme.background, 0.2),
-          color: theme.foreground,
-        };
-      case 'error':
-        return {
-          background: theme.danger,
-          color: theme.dangerAccent,
-        };
-    }
-  },
-  ({ position }) =>
-    (position === 'top' || position === 'bottom') && {
-      textAlign: 'center',
-    },
-  ({ position, skin, theme }) => ({
-    '&::before': arrowStyles({
-      direction: positionToArrowDirection[position],
-      width: 15,
-      height: 8,
-      color:
-        skin === 'default'
-          ? theme.raise(theme.background, 0.2)
-          : skin === 'error'
-          ? theme.danger
-          : undefined,
-    }),
-  }),
-  ({ position, align }) => ({
-    '&::before': {
-      ...arrowPositioning(position),
-      ...arrowAligning(position, align),
-    },
+const Tooltip = styled.div(themeStyles([{
+  whiteSpace: 'pre-wrap',
+  wordBreak: 'break-word',
+  width: 'max-content',
+  borderRadius: 4,
+  boxShadow: '0 0 8px rgba(0,0,0,.7)',
+  fontSize: 15,
+  padding: '.4em .8em',
+  animation: `${animations.fadeIn} ${timing.normal} ease-out`,
+  '&::before': {
+    content: '""',
+    position: 'absolute'
+  }
+}], [{
+  whiteSpace: 'pre-wrap',
+  wordBreak: 'break-word',
+  width: 'max-content',
+  borderRadius: 10,
+  border: '1px solid transparent',
+  boxShadow: '0 8px 24px rgba(0,0,0,.3)',
+  fontSize: 12,
+  lineHeight: 1.5,
+  fontWeight: 400,
+  padding: '8px 12px',
+  animation: `${animations.fadeIn} ${timing.normal} ease-out`,
+  '&::before': {
+    content: '""',
+    position: 'absolute'
+  }
+}]), ({
+  maxWidth
+}) => ({
+  maxWidth: maxWidth || 300
+}), themeStyles([({
+  skin,
+  theme
+}) => {
+  switch (skin) {
+    case 'default':
+      return {
+        background: theme.raise(theme.background, 0.2),
+        color: theme.foreground
+      };
+    case 'error':
+      return {
+        background: theme.danger,
+        color: theme.dangerAccent
+      };
+  }
+}], [({
+  skin,
+  theme
+}) => {
+  switch (skin) {
+    case 'default':
+      return {
+        background: mix(theme.background, theme.primary, 0.05),
+        borderColor: fade(theme.primary, 0.75),
+        boxShadow: `0 8px 24px rgba(0,0,0,.3), inset 0 1px ${fade(theme.foreground, 0.94)}`,
+        color: theme.foreground
+      };
+    case 'error':
+      return {
+        background: theme.danger,
+        borderColor: fade(theme.dangerAccent, 0.75),
+        color: theme.dangerAccent
+      };
+  }
+}]), ({
+  position
+}) => (position === 'top' || position === 'bottom') && {
+  textAlign: 'center'
+}, themeStyles([({
+  position,
+  skin,
+  theme
+}) => ({
+  '&::before': arrowStyles({
+    direction: positionToArrowDirection[position],
+    width: 15,
+    height: 8,
+    color: skin === 'default' ? theme.raise(theme.background, 0.2) : skin === 'error' ? theme.danger : undefined
   })
-);
+})], [({
+  position,
+  skin,
+  theme
+}) => ({
+  '&::before': arrowStyles({
+    direction: positionToArrowDirection[position],
+    width: 10,
+    height: 5,
+    color: skin === 'default' ? mix(theme.background, theme.primary, 0.05) : skin === 'error' ? theme.danger : undefined
+  })
+})]), ({
+  position,
+  align
+}) => ({
+  '&::before': {
+    ...arrowPositioning(position),
+    ...arrowAligning(position, align)
+  }
+}));
 
 function TooltipPortal(props) {
   const ref = useRef();

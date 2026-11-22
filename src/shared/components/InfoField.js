@@ -28,9 +28,9 @@ export default function InfoField({
   ...rest
 }) {
   return (
-    <Row leftSize={ratio[0]} rightSize={ratio[1]} {...rest}>
-      <Label>{label}</Label>
-      <Value>{children}</Value>
+    <Row data-info-field="true" leftSize={ratio[0]} rightSize={ratio[1]} {...rest}>
+      <Label data-info-label="true">{label}</Label>
+      <Value data-info-value="true">{children}</Value>
     </Row>
   );
 }

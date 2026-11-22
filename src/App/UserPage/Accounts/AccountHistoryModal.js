@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
+import { fade } from 'utils/color';
+import Button from 'components/Button';
 
 import ControlledModal from 'components/ControlledModal';
 import WaitingMessage from 'components/WaitingMessage';
@@ -203,24 +206,54 @@ const columns = [
   },
 ];
 
-const Layout = styled.div({
+const Layout = styled.div(({ theme }) => ({
   height: '100%',
   display: 'grid',
   gridTemplateAreas: '"balances" "table"',
   gridTemplateRows: 'min-content 1fr',
   rowGap: '1em',
-});
+  ...(theme.modern && { height: 'auto', minWidth: 0, gap: 24, gridTemplateRows: 'auto auto' }),
+}));
 
-const BalancesFieldSet = styled(FieldSet)({
+const BalancesFieldSet = styled(FieldSet)(({ theme }) => ({
   gridArea: 'balances',
   margin: 0,
   fontSize: 15,
-});
+  ...(theme.modern && {
+    border: 0, padding: 0, minWidth: 0,
+    'legend': { textAlign: 'left', padding: '0 0 12px', fontSize: 12, textTransform: 'none', color: theme.mixer(0.65) },
+    '> .flex': { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 },
+    '.text-center': { textAlign: 'left', padding: '16px', borderRadius: 12, border: `1px solid ${fade(theme.foreground, 0.9)}`, background: fade(theme.foreground, 0.97), minWidth: 0 },
+    '.text-center:first-of-type': { background: fade(theme.primary, 0.95), borderColor: fade(theme.primary, 0.8) },
+    'strong': { fontSize: 12, fontWeight: 500, color: theme.mixer(0.65) },
+    '.text-center > div:last-child': { marginTop: 8, fontSize: 24, fontWeight: 600, fontVariantNumeric: 'tabular-nums', overflowWrap: 'anywhere' },
+  }),
+}));
+
+const Heading = styled.div(({ theme }) => ({
+  '.label': { fontSize: 12, fontWeight: 500, color: theme.mixer(0.65), marginBottom: 4 },
+  'h2': { margin: 0, fontSize: 26, fontWeight: 600, lineHeight: 1.3, letterSpacing: '-0.6px', color: theme.foreground, overflowWrap: 'anywhere' },
+}));
+
+const EmptyHistory = styled.div(({ theme }) => ({
+  padding: '48px 24px', textAlign: 'center', borderRadius: 14,
+  border: `1px solid ${fade(theme.foreground, 0.9)}`, background: fade(theme.foreground, 0.98),
+  'h3': { margin: '0 0 8px', fontSize: 16, fontWeight: 500, color: theme.foreground },
+  'p': { margin: 0, fontSize: 13, color: theme.mixer(0.65), lineHeight: 1.6 },
+}));
 
 const ContractsTable = styled(Table)(({ theme }) => ({
   gridArea: 'table',
   color: theme.foreground,
   overflow: 'auto',
+  ...(theme.modern && {
+    minWidth: 0, fontSize: 13,
+    '[role="grid"]': { border: `1px solid ${fade(theme.foreground, 0.9)}`, borderRadius: 12 },
+    '[role="row"]': { background: 'transparent', minHeight: 44 },
+    '[role="row"]:hover': { background: fade(theme.foreground, 0.97) },
+    '[role="columnheader"]': { background: fade(theme.foreground, 0.96), border: 0, fontSize: 11, fontWeight: 500, textTransform: 'none', letterSpacing: 0, padding: '12px 16px' },
+    '[role="gridcell"]': { borderLeft: 0, borderTop: `1px solid ${fade(theme.foreground, 0.94)}`, padding: '12px 16px' },
+  }),
 }));
 
 const Amount = styled.span(({ theme, possitive }) => ({
@@ -232,6 +265,7 @@ const Amount = styled.span(({ theme, possitive }) => ({
 }));
 
 export default function AccountHistoryModal({ account }) {
+  const { modern } = useTheme();
   const [contracts, setContracts] = useState(null);
   const showFiat = useSelector((state) => state.ui.user.balancesShowFiat);
   const price = useSelector((state) => state.market?.price);
@@ -273,10 +307,10 @@ export default function AccountHistoryModal({ account }) {
       assignClose={(closeModal) => {
         closeModalRef.current = closeModal;
       }}
-      style={{ width: '80%' }}
+      style={{ width: modern ? 'min(1080px, calc(100vw - 32px))' : '80%' }}
     >
       <ControlledModal.Header>
-        {account.name} {__('Account History')}
+        {modern ? <Heading><div className="label">{__('Account History')}</div><h2>{account.name || __('Unnamed')}</h2></Heading> : <>{account.name} {__('Account History')}</>}
       </ControlledModal.Header>
       <ControlledModal.Body>
         {!contracts ? (
@@ -380,7 +414,12 @@ export default function AccountHistoryModal({ account }) {
               </div>
             </BalancesFieldSet>
 
-            <ContractsTable
+            {modern && contracts.length === 0 ? (
+              <EmptyHistory role="status">
+                <h3>{__('No account activity yet')}</h3>
+                <p>{__('Transactions for this account will appear here.')}</p>
+              </EmptyHistory>
+            ) : <ContractsTable
               data={contracts}
               defaultColumn={defaultColumn}
               columns={columns}
@@ -392,10 +431,11 @@ export default function AccountHistoryModal({ account }) {
                   txid: contract?.txid,
                 });
               }}
-            />
+            />}
           </Layout>
         )}
       </ControlledModal.Body>
+      {modern && <ControlledModal.Footer separator><div style={{ display: 'flex', justifyContent: 'flex-end' }}><Button onClick={() => closeModalRef.current?.()}>{__('Close')}</Button></div></ControlledModal.Footer>}
     </ControlledModal>
   );
 }

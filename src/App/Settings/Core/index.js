@@ -2,6 +2,8 @@
 import { useEffect, useId } from 'react';
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
+import { fade } from 'utils/color';
 
 // Internal
 import Form from 'components/Form';
@@ -35,6 +37,12 @@ const RestartPrompt = styled.div(({ theme }) => ({
   paddingTop: 10,
   marginRight: 6,
   zIndex: 1,
+  ...(theme.modern && {
+    position: 'sticky', bottom: -20, marginRight: 0, marginTop: 20,
+    padding: 16, borderRadius: 12, background: theme.background,
+    border: `1px solid ${fade(theme.primary, 0.75)}`,
+    'button': { height: 34, borderRadius: 8, fontSize: 12, padding: '0 12px' },
+  }),
 }));
 
 const RestartContainer = styled.div({
@@ -43,14 +51,18 @@ const RestartContainer = styled.div({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-});
+}, ({ theme }) => theme.modern && ({ maxWidth: 'none', gap: 16, flexWrap: 'wrap', fontSize: 13 }));
 
 const CoreModes = styled.div({
   display: 'flex',
   justifyContent: 'center',
   marginTop: 10,
   marginBottom: 20,
-});
+}, ({ theme }) => theme.modern && ({
+  justifyContent: 'flex-start', gap: 8, marginTop: 0, marginBottom: 16, flexWrap: 'wrap',
+  padding: 8, borderRadius: 12, border: `1px solid ${fade(theme.primary, 0.82)}`, background: fade(theme.background, 0.25),
+  '> button': { height: 34, borderRadius: 8, marginLeft: 0, padding: '0 14px', fontSize: 12 },
+}));
 
 const EmbeddedMode = styled(Button)(
   {
@@ -178,6 +190,7 @@ function handleRestartSwitch(e) {
 }
 
 export default function SettingsCore() {
+  const { modern } = useTheme();
   const switchId = useId();
   const settings = useSelector((state) => state.settings);
   const { manualDaemon } = settings;
@@ -213,6 +226,7 @@ export default function SettingsCore() {
           <div style={{ paddingBottom: dirty ? 55 : 0 }}>
             <CoreModes>
               <EmbeddedMode
+                aria-pressed={!manualDaemon}
                 skin={manualDaemon ? 'default' : 'filled-primary'}
                 active={!manualDaemon}
                 onClick={
@@ -224,6 +238,7 @@ export default function SettingsCore() {
                 {__('Embedded Core')}
               </EmbeddedMode>
               <ManualMode
+                aria-pressed={!!manualDaemon}
                 skin={manualDaemon ? 'filled-primary' : 'default'}
                 active={manualDaemon}
                 onClick={
@@ -266,7 +281,7 @@ export default function SettingsCore() {
                     )}
                   </div>
 
-                  <Form.SubmitButton>{__('Save settings')}</Form.SubmitButton>
+                  <Form.SubmitButton skin={modern ? 'filled-primary' : undefined}>{__('Save settings')}</Form.SubmitButton>
                 </RestartContainer>
               </RestartPrompt>
             )}

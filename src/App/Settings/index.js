@@ -1,8 +1,12 @@
+import { moduleLayout, modulePanel, moduleTabs, moduleTab } from 'utils/moduleStyles';
 // External
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
+import GridTracers, { modernGridBackground } from 'components/GridTracers';
+import { fade } from 'utils/color';
 import UT from 'lib/usageTracking';
 
 // Internal Global
@@ -25,29 +29,57 @@ import legoIcon from 'icons/lego-block.svg';
 
 __ = __context('Settings');
 
+const ModernPage = styled.section(({ theme }) => ({
+  position: 'relative', width: '100%', height: '100%', minWidth: 0,
+  display: 'flex', flexDirection: 'column', overflow: 'hidden',
+  color: theme.foreground, ...modernGridBackground(theme),
+}));
+
+function SettingsFrame({ children }) {
+  const { modern } = useTheme();
+  if (!modern) return <Panel bodyScrollable={false} icon={settingsIcon} title={__('Settings')}>{children}</Panel>;
+  return (
+    <ModernPage>
+      <GridTracers />
+      {children}
+    </ModernPage>
+  );
+}
+
 const SettingsComponent = styled.div({
   height: '100%',
   display: 'grid',
   gridTemplateAreas: '"tab-bar" "content"',
   gridTemplateRows: 'min-content 1fr',
   position: 'relative',
-});
+}, ({ theme }) => theme.modern && ({
+  height: 'auto', flex: 1, minHeight: 0, minWidth: 0, zIndex: 1,
+  padding: moduleLayout.pagePadding,
+  gridTemplateRows: 'auto minmax(0, 1fr)', gap: moduleLayout.gap,
+}));
 
 const SettingsTabBar = styled(RouterHorizontalTab.TabBar)({
   gridArea: 'tab-bar',
-});
+}, ({ theme }) => theme.modern && ({
+  ...moduleTabs(theme),
+  '& > a': moduleTab(theme),
+}));
 
 const SettingsContent = styled.div({
   gridArea: 'content',
   overflow: 'auto',
   margin: '0 -30px',
   padding: '0 30px',
-});
+}, ({ theme }) => theme.modern && ({
+  minHeight: 0, minWidth: 0, margin: 0, padding: moduleLayout.panelPadding,
+  ...modulePanel(theme),
+  '@media (max-width: 700px)': { padding: 14 },
+}));
 
 const SettingsContainer = styled.div({
   maxWidth: 750,
   margin: '0 auto',
-});
+}, ({ theme }) => theme.modern && ({ maxWidth: 1100, paddingBottom: 12 }));
 
 const Badge = styled.div(({ theme }) => ({
   background: theme.primary,
@@ -82,7 +114,7 @@ export default function Settings() {
   const updateCount = useSelector(selectModuleUpdateCount);
 
   return (
-    <Panel bodyScrollable={false} icon={settingsIcon} title={__('Settings')}>
+    <SettingsFrame>
       <SettingsComponent>
         <SettingsTabBar>
           <RouterHorizontalTab
@@ -122,6 +154,6 @@ export default function Settings() {
           </SettingsContainer>
         </SettingsContent>
       </SettingsComponent>
-    </Panel>
+    </SettingsFrame>
   );
 }

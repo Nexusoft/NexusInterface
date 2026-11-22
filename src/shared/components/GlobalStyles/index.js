@@ -27,11 +27,25 @@ const resetStyles = (theme) => ({
     height: '100vh',
     margin: 0,
     fontFamily: '"Noto Sans", sans-serif',
-    fontSize: 16,
+    fontSize: theme.modern ? 14 : 16,
+    background: theme.modern ? theme.background : undefined,
+    WebkitFontSmoothing: theme.modern ? 'antialiased' : undefined,
     lineHeight: consts.lineHeight,
     overflow: 'hidden',
   },
 
+  'a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible': {
+    outline: `2px solid ${theme.primary}`,
+    outlineOffset: 3,
+  },
+  '@media (prefers-reduced-motion: reduce)': {
+    '*, *::before, *::after': {
+      animationDuration: '0.01ms !important',
+      animationIterationCount: '1 !important',
+      transitionDuration: '0.01ms !important',
+      scrollBehavior: 'auto !important',
+    },
+  },
   '#root': {
     height: '100%',
   },

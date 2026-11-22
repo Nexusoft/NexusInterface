@@ -1,6 +1,7 @@
 // External
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import { fade } from 'utils/color';
 
 // Internal
 import ModuleIcon from 'components/ModuleIcon';
@@ -35,12 +36,22 @@ const ModuleComponent = styled.div(
     borderBottom: `1px solid ${theme.mixer(0.125)}`,
     opacity: 0.8,
     transition: `opacity ${timing.normal}`,
+    ...(theme.modern && {
+      padding: 14, marginTop: 10, marginBottom: 0, borderRadius: 10,
+      border: `1px solid ${fade(theme.primary, 0.85)}`,
+      background: fade(theme.primary, 0.97), opacity: 1,
+      gridTemplateColumns: 'min-content minmax(0, 1fr) min-content',
+      '@media (max-width: 700px)': {
+        gridTemplateAreas: '"logo info" "controls controls"',
+        gridTemplateColumns: 'min-content minmax(0, 1fr)', rowGap: 16,
+      },
+    }),
     '&:hover': {
       opacity: 1,
     },
   }),
-  ({ last }) =>
-    last && {
+  ({ last, theme }) =>
+    last && !theme.modern && {
       borderBottom: 'none',
     }
 );
@@ -58,6 +69,8 @@ const ModuleLogo = styled.div(
 const ModuleInfo = styled.div(
   {
     gridArea: 'info',
+    minWidth: 0,
+    overflowWrap: 'anywhere',
   },
   ({ unclickable }) =>
     !unclickable && {
@@ -65,13 +78,21 @@ const ModuleInfo = styled.div(
     }
 );
 
-const ModuleControls = styled.div({
+const ModuleControls = styled.div(({ theme }) => ({
   gridArea: 'controls',
   display: 'flex',
   alignItems: 'center',
-});
+  ...(theme.modern && {
+    gap: 8, flexWrap: 'wrap', minWidth: 0,
+    'input[type="checkbox"]': { fontSize: 12, margin: 0 },
+    'input:focus-visible': { outline: `2px solid ${theme.primary}`, outlineOffset: 4 },
+    'button': { height: 34, borderRadius: 8, padding: '0 12px', fontSize: 12, textTransform: 'none', gap: 6, margin: 0 },
+    'button svg': { width: 13, height: 13, margin: 0, flexShrink: 0 },
+  }),
+}));
 
 const ModuleName = styled.span(({ theme }) => ({
+  ...(theme.modern && { fontSize: 13, fontWeight: 500 }),
   color: theme.foreground,
   verticalAlign: 'middle',
 }));
@@ -86,6 +107,7 @@ const ModuleVersion = styled.span(({ theme }) => ({
 const ModuleDescription = styled.div(({ theme }) => ({
   color: theme.mixer(0.75),
   fontSize: '.9em',
+  ...(theme.modern && { fontSize: 12, lineHeight: 1.6, marginTop: 4, color: theme.mixer(0.6) }),
 }));
 
 const Badge = styled.div(({ theme }) => ({
@@ -236,6 +258,7 @@ export default function Module({ module, ...rest }) {
             }
           >
             <Switch
+              aria-label={__('Enable %{moduleName}', { moduleName: module.info.displayName })}
               checked={module.enabled}
               onChange={toggleModule}
               disabled={module.disallowed || module.development}

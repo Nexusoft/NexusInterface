@@ -12,9 +12,9 @@ import Dialog from './Dialog';
 __ = __context('SuccessDialog');
 
 const CheckMark = styled(Dialog.Icon)(({ theme }) => ({
-  fontSize: 44,
+  fontSize: theme.modern ? 28 : 44,
   color: theme.primary,
-  borderWidth: 3,
+  borderWidth: theme.modern ? 1 : 3,
   filter: `drop-shadow(0 0 5px ${color.fade(theme.primary, 0.5)})`,
 }));
 

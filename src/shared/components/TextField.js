@@ -317,6 +317,9 @@ const TextField = forwardRef(function (
 
   return (
     <TextFieldComponent
+      data-wallet-field="text"
+      data-field-error={!!error}
+      data-multiline={!!multiline}
       {...{ className, style, skin, size, error, multiline }}
       focus={!readOnly && focus}
     >

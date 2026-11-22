@@ -33,6 +33,12 @@ const TransactionComponent = styled.div(
     boxShadow: '0 0 5px 0 rgba(0,0,0,.5)',
     display: 'flex',
     alignItems: 'stretch',
+    ...(theme.modern && {
+      margin: '0 0 12px', borderRadius: 14, overflow: 'hidden',
+      border: `1px solid ${color.fade(theme.primary, 0.82)}`,
+      background: 'linear-gradient(120deg, #1b292f, #1c1e20)',
+      boxShadow: '0 8px 24px rgba(0,0,0,.12)',
+    }),
   }),
   ({ unconfirmed }) =>
     unconfirmed && {
@@ -52,6 +58,7 @@ const TransactionLeft = styled.div(({ theme }) => ({
   '&:hover': {
     background: color.lighten(theme.lower(theme.background, 0.1), 0.2),
   },
+  ...(theme.modern && { borderRight: `1px solid ${color.fade(theme.primary, 0.85)}` }),
 }));
 
 const TransactionDate = styled.div({
@@ -74,6 +81,7 @@ const ShortDate = styled.div(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   background: theme.lower(theme.background, 0.1),
+  ...(theme.modern && { background: '#1b2b31', color: theme.primary }),
   transition: `opacity ${timing.normal}`,
 
   [`${TransactionLeft}:hover &`]: {
@@ -97,7 +105,7 @@ const TransactionRight = styled.div({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-});
+}, ({ theme }) => theme.modern && ({ minWidth: 0 }));
 
 export default function Transaction({ transaction }) {
   const txTime = new Date(transaction.timestamp * 1000);

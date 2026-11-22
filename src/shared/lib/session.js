@@ -86,7 +86,8 @@ export async function refreshUserStatus() {
       session ? { session } : undefined
     );
 
-    if (store.getState().user.profileStatus?.genesis !== status.genesis) {
+    if (store.getState().user.profileStatus?.genesis !== status.genesis ||
+        store.getState().user.profileStatus?.recoveryPending) {
       const profileStatus = await callAPI('profiles/status/master', {
         genesis: status.genesis,
         session,

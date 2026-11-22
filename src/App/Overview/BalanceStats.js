@@ -59,7 +59,7 @@ function BalanceValue({ children }) {
   return children;
 }
 
-export function NXSBalanceStat() {
+export function NXSBalanceStat({ compact = false }) {
   const [nxsBalances, tokenBalances] = useSelector(selectBalances);
   const synchronized = useSelector(isSynchronized);
   const hideOverviewBalances = useSelector(
@@ -68,6 +68,7 @@ export function NXSBalanceStat() {
 
   return (
     <Stat
+      compact={compact}
       tooltipAlign="end"
       tooltip={
         tokenBalances?.length > 0 &&
@@ -80,7 +81,7 @@ export function NXSBalanceStat() {
         <>
           {!synchronized && nxsBalances && <UnsyncWarning />}
           <span className="v-align">
-            {__('Balance')}
+            {__('My Balance')}
             {tokenBalances?.length === 0 && ' (NXS)'}
           </span>
         </>
@@ -116,7 +117,7 @@ export function NXSFiatBalanceStat() {
       linkTo="/Transactions"
       label={
         <>
-          {__('NXS Balance')} ({currency})
+          {__('NXS Fiat Value')} ({currency})
         </>
       }
       icon={currencyIcons(currency)}

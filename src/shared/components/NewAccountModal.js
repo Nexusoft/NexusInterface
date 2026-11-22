@@ -1,4 +1,7 @@
 import { useSelector } from 'react-redux';
+import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
+import { fade } from 'utils/color';
 
 import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
@@ -14,6 +17,24 @@ import UT from 'lib/usageTracking';
 import memoize from 'utils/memoize';
 
 __ = __context('NewAccount');
+
+const AccountModal = styled(ControlledModal)(({ theme }) => theme.modern && ({
+  '.account-intro': { margin: '0 0 24px', fontSize: 14, lineHeight: 1.7, color: theme.mixer(0.7) },
+  '.account-input': {
+    minHeight: 48, borderRadius: 10,
+    border: `1px solid ${fade(theme.primary, 0.75)}`,
+    background: fade(theme.foreground, 0.96),
+    '&:focus-within': { borderColor: theme.primary, boxShadow: `0 0 0 3px ${fade(theme.primary, 0.9)}` },
+  },
+  '.account-hint': { margin: '8px 0 0', fontSize: 12, lineHeight: 1.6, color: theme.mixer(0.6) },
+  '.account-fee': { padding: '10px 14px', borderRadius: 8, background: fade(theme.primary, 0.92), color: theme.primary, fontSize: 12 },
+  '.account-actions': {
+    marginTop: 28, paddingTop: 20, borderTop: `1px solid ${fade(theme.primary, 0.85)}`,
+    justifyContent: 'flex-end', gap: 12,
+    'button': { minHeight: 44, height: 'auto', padding: '10px 20px' },
+    '@media (max-width: 480px)': { flexDirection: 'column-reverse', 'button': { width: '100%' } },
+  },
+}));
 
 const getSuggestions = memoize((userTokens) => [
   'NXS',
@@ -51,6 +72,7 @@ async function createToken({ name, token }) {
 }
 
 export default function NewAccountModal({ tokenName, tokenAddress }) {
+  const { modern } = useTheme();
   const suggestions = useSelector((state) =>
     tokenName || tokenAddress ? [] : getSuggestions(state.user.tokens)
   );
@@ -59,11 +81,12 @@ export default function NewAccountModal({ tokenName, tokenAddress }) {
   const SelectToken = tokenPreset ? Form.TextField : Form.AutoSuggest;
 
   return (
-    <ControlledModal maxWidth={700}>
+    <AccountModal maxWidth={modern ? 580 : 700}>
       {(closeModal) => (
         <>
           <ControlledModal.Header>{__('New account')}</ControlledModal.Header>
           <ControlledModal.Body>
+            {modern && <p className="account-intro">{__('Create a separate account for NXS or a token. Add an optional name to make it easier to recognize.')}</p>}
             <Form
               name="new_account"
               initialValues={{
@@ -97,15 +120,18 @@ export default function NewAccountModal({ tokenName, tokenAddress }) {
                   >
                     <Form.TextField
                       name="name"
+                      skin={modern ? 'filled-inverted' : undefined}
+                      className={modern ? 'account-input' : undefined}
                       placeholder={__("New account's name")}
                     />
                   </FormField>
+                  {modern && <p className="account-hint">{__('Leave the name blank to create an unnamed account. Adding a name costs a NXS fee.')}</p>}
 
                   <Form.Field
                     name="name"
                     component={({ input }) =>
                       !!input.value && (
-                        <div className="mt1">
+                        <div className={modern ? 'mt1 account-fee' : 'mt1'}>
                           <span>
                             {__('Fee: %{nameFee} NXS', {
                               nameFee: createLocalNameFee,
@@ -120,11 +146,15 @@ export default function NewAccountModal({ tokenName, tokenAddress }) {
                     <FormField connectLabel label={__('Token name/address')}>
                       <SelectToken
                         name="token"
+                        {...(modern ? tokenPreset
+                          ? { skin: 'filled-inverted' }
+                          : { inputProps: { skin: 'filled-inverted', className: 'account-input' } }
+                          : {})}
                         validate={required()}
                         suggestions={suggestions}
                         filterSuggestions={(suggestions) => suggestions}
                         disabled={tokenPreset}
-                        className={tokenPreset ? 'dim' : undefined}
+                        className={tokenPreset ? (modern ? 'dim account-input' : 'dim') : undefined}
                         onSelect={
                           tokenPreset
                             ? undefined
@@ -132,11 +162,12 @@ export default function NewAccountModal({ tokenName, tokenAddress }) {
                         }
                       />
                     </FormField>
+                    {modern && <p className="account-hint">{tokenPreset ? __('The token is selected for this account.') : __('Choose NXS, select one of your tokens, or enter a token name or address.')}</p>}
                   </div>
 
-                  <div className="mt3 flex space-between">
-                    <Button onClick={closeModal}>{__('Cancel')}</Button>
-                    <Form.SubmitButton skin="primary">
+                  <div className={modern ? 'account-actions flex' : 'mt3 flex space-between'}>
+                    <Button type="button" onClick={closeModal}>{__('Cancel')}</Button>
+                    <Form.SubmitButton skin={modern ? 'filled-primary' : 'primary'}>
                       {({ submitting }) =>
                         submitting
                           ? __('Creating account') + '...'
@@ -150,6 +181,6 @@ export default function NewAccountModal({ tokenName, tokenAddress }) {
           </ControlledModal.Body>
         </>
       )}
-    </ControlledModal>
+    </AccountModal>
   );
 }

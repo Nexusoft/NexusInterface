@@ -1,6 +1,8 @@
 // External
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
+import { fade, mix } from 'utils/color';
 import UT from 'lib/usageTracking';
 
 // Internal Global
@@ -29,12 +31,29 @@ const SearchInput = styled(TextField)({
   marginLeft: '1em',
   fontSize: '.9375em',
   width: 200,
-});
+}, ({ theme }) => theme.modern && ({
+  marginLeft: 'auto', width: 'min(420px, 100%)', minWidth: 0, flex: '0 1 420px',
+  height: 42, borderRadius: 10, paddingLeft: 14,
+  background: mix(theme.background, '#000000', 0.18), borderColor: fade(theme.primary, 0.8),
+  '> svg': { width: 16, height: 16, flexShrink: 0, margin: 0, color: theme.primary },
+  '> input': { flex: '1 1 0%', minWidth: 0, width: 0, paddingLeft: 10, fontSize: 13 },
+  '&:focus-within': { borderColor: theme.primary },
+  '@media (max-width: 600px)': { flexBasis: '100%', width: '100%' },
+}));
+
+const ToolbarButton = styled(Button)(({ theme }) => theme.modern && ({
+  width: 42, height: 42, padding: 10, borderRadius: 10,
+  color: theme.primary, background: fade(theme.primary, 0.94),
+  '&:hover': { background: fade(theme.primary, 0.88), color: theme.primary },
+}));
 
 function SearchBox() {
+  const { modern } = useTheme();
   const searchQuery = useSelector((state) => state.ui.addressBook.searchQuery);
   return (
     <SearchInput
+      skin={modern ? 'filled-inverted' : 'underline'}
+      aria-label={__('Search contact')}
       left={<Icon icon={searchIcon} className="mr0_4" />}
       placeholder={__('Search contact')}
       value={searchQuery}
@@ -96,12 +115,14 @@ function exportAddressBook(addressBook) {
 
 export default function PanelControls() {
   const coreConnected = useSelector(isCoreConnected);
+  const addressBook = useSelector((state) => state.addressBook);
 
   return (
     <div className="flex center">
       {coreConnected && (
         <Tooltip.Trigger tooltip={__('New contact')}>
-          <Button
+          <ToolbarButton
+            aria-label={__('New contact')}
             skin="plain"
             className="relative"
             onClick={() => {
@@ -109,14 +130,14 @@ export default function PanelControls() {
             }}
           >
             <ControlIcon icon={addContactIcon} />
-          </Button>
+          </ToolbarButton>
         </Tooltip.Trigger>
       )}
 
       <Tooltip.Trigger tooltip={__('Export contacts')}>
-        <Button skin="plain" className="relative" onClick={exportAddressBook}>
+        <ToolbarButton skin="plain" className="relative" aria-label={__('Export contacts')} disabled={!addressBook || !Object.keys(addressBook).length} onClick={() => exportAddressBook(addressBook)}>
           <ControlIcon icon={exportIcon} />
-        </Button>
+        </ToolbarButton>
       </Tooltip.Trigger>
 
       <SearchBox />

@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import { fade, mix } from 'utils/color';
 
 import AddEditContactModal from 'components/AddEditContactModal';
 import { openModal } from 'lib/ui';
@@ -15,6 +16,13 @@ const ContactListComponent = styled.div(({ theme }) => ({
   overflowY: 'auto',
   borderRight: `1px solid ${theme.mixer(0.125)}`,
   marginLeft: -30,
+  ...(theme.modern && {
+    minWidth: 0, minHeight: 0, marginLeft: 0, padding: 10, borderRadius: 16,
+    border: `1px solid ${fade(theme.primary, 0.8)}`,
+    background: `linear-gradient(135deg, ${mix(theme.background, theme.primary, 0.055)}, ${theme.background})`,
+    boxShadow: `inset 0 1px ${fade(theme.foreground, 0.96)}`,
+    '@media (max-width: 800px)': { maxHeight: 300 },
+  }),
 }));
 
 const Separator = styled.div(({ theme }) => ({

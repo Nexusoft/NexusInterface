@@ -1,4 +1,8 @@
 import Form from 'components/Form';
+import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
+import Button from 'components/Button';
+import { fade } from 'utils/color';
 import ControlledModal from 'components/ControlledModal';
 import FormField from 'components/FormField';
 import Spinner from 'components/Spinner';
@@ -16,7 +20,24 @@ const initialValues = {
   newPin: '',
 };
 
+const CredentialGroup = styled.div(({ theme }) => theme.modern ? {
+  padding: '16px 18px', marginBottom: 16, borderRadius: 12,
+  border: `1px solid ${fade(theme.primary, 0.8)}`, background: fade(theme.primary, 0.97),
+  '> h3': { margin: '0 0 14px', color: theme.primary, fontSize: 12, fontWeight: 600 },
+  '> div': { marginTop: 14 },
+  'label': { fontSize: 12, textTransform: 'none', marginBottom: 8, color: theme.mixer(0.75) },
+  'input': { minWidth: 0, fontSize: 13 },
+  '.credential-input': { borderRadius: 8, minHeight: 40 },
+  '@media (max-width: 500px)': { padding: 14 },
+} : {});
+
+const Actions = styled.div(({ theme }) => theme.modern ? {
+  display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 20, flexWrap: 'wrap',
+  'button': { height: 34, borderRadius: 8, padding: '0 16px', fontSize: 12 },
+} : { marginTop: '2em' });
+
 export default function ChangePasswordPinModal() {
+  const { modern } = useTheme();
   return (
     <ControlledModal maxWidth={500}>
       {(closeModal) => (
@@ -57,8 +78,12 @@ export default function ChangePasswordPinModal() {
                 errorMessage: __('Error updating password & PIN'),
               })}
             >
-              <FormField label={__('Current password')}>
+              <CredentialGroup>
+              {modern && <h3>{__('Current credentials')}</h3>}
+              <FormField connectLabel label={__('Current password')}>
                 <Form.TextFieldWithKeyboard
+                  className="credential-input"
+                  skin={modern ? 'filled-inverted' : 'underline'}
                   name="password"
                   maskable
                   placeholder={__('Your current password')}
@@ -67,18 +92,24 @@ export default function ChangePasswordPinModal() {
                 />
               </FormField>
 
-              <FormField label={__('Current PIN')}>
+              <FormField connectLabel label={__('Current PIN')}>
                 <Form.TextFieldWithKeyboard
+                  className="credential-input"
+                  skin={modern ? 'filled-inverted' : 'underline'}
                   name="pin"
                   maskable
                   placeholder={__('Your current PIN')}
                   validate={required()}
                 />
               </FormField>
+              </CredentialGroup>
 
-              <div className="mt2">
+              <CredentialGroup className={modern ? undefined : 'mt2'}>
+                {modern && <h3>{__('New credentials')}</h3>}
                 <FormField connectLabel label={__('New Password')}>
                   <Form.TextFieldWithKeyboard
+                    className="credential-input"
+                    skin={modern ? 'filled-inverted' : 'underline'}
                     maskable
                     name="newPassword"
                     placeholder={__('Enter your new password')}
@@ -88,16 +119,19 @@ export default function ChangePasswordPinModal() {
 
                 <FormField connectLabel label={__('New PIN')}>
                   <Form.TextFieldWithKeyboard
+                    className="credential-input"
+                    skin={modern ? 'filled-inverted' : 'underline'}
                     maskable
                     name="newPin"
                     placeholder={__('Enter your new PIN')}
                     validate={checkAll(required(), minChars(4))}
                   />
                 </FormField>
-              </div>
+              </CredentialGroup>
 
-              <div className="mt2">
-                <Form.SubmitButton skin="primary" wide>
+              <Actions>
+                {modern && <Button type="button" onClick={closeModal}>{__('Cancel')}</Button>}
+                <Form.SubmitButton skin={modern ? 'filled-primary' : 'primary'} wide={!modern}>
                   {({ submitting }) =>
                     submitting ? (
                       <span>
@@ -109,7 +143,7 @@ export default function ChangePasswordPinModal() {
                     )
                   }
                 </Form.SubmitButton>
-              </div>
+              </Actions>
             </Form>
           </ControlledModal.Body>
         </>

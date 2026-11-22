@@ -2,6 +2,7 @@ import FormField from 'components/FormField';
 import Form from 'components/Form';
 import QuestionCircle from 'components/QuestionCircle';
 import { useFieldValue } from 'lib/form';
+import styled from '@emotion/styled';
 
 __ = __context('Send');
 
@@ -12,13 +13,20 @@ const numberInputProps = {
   style: { maxWidth: 80 },
 };
 
+const ExpiryLayout = styled.div(({ theme }) => (theme.modern ? {
+  display: 'flex', marginTop: 12,
+  '> div': { display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'flex-end' },
+  '> div > div': { marginLeft: 0 },
+  '> div > div:first-of-type': { flexBasis: '100%' },
+} : {}));
+
 export default function ExpiryFields() {
   const turnedOn = useFieldValue('advancedOptions');
 
   if (!turnedOn) return null;
 
   return (
-    <div className="flex center justify-end mt1">
+    <ExpiryLayout className="flex center mt1">
       <div className="flex">
         <FormField
           label={
@@ -49,6 +57,6 @@ export default function ExpiryFields() {
           <Form.TextField name={'expiry.expireSeconds'} {...numberInputProps} />
         </FormField>
       </div>
-    </div>
+    </ExpiryLayout>
   );
 }

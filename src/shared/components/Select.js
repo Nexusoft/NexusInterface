@@ -355,6 +355,8 @@ const Select = forwardRef(function (
   return (
     <>
       <SelectControl
+        data-wallet-field="select"
+        data-field-error={!!error}
         ref={(el) => {
           passRef(el, controlRef);
           passRef(el, ref);

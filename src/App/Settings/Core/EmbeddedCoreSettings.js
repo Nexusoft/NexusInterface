@@ -3,9 +3,7 @@ import { useSelector } from 'react-redux';
 
 import Form from 'components/Form';
 import SettingsField from 'components/SettingsField';
-import Button from 'components/Button';
 import Switch from 'components/Switch';
-import TextField from 'components/TextField';
 import { useFieldValue } from 'lib/form';
 import { updateSettings } from 'lib/settings';
 import { confirm, openErrorDialog } from 'lib/dialog';
@@ -16,6 +14,8 @@ import { preRelease } from 'consts/misc';
 import { rm as deleteDirectory } from 'fs/promises';
 import { consts } from 'styles';
 import store from 'store';
+import Group from '../SettingsGroup';
+import { CoreInput, StaticCoreInput, CoreButton } from './Controls';
 
 __ = __context('Settings.Core');
 
@@ -24,25 +24,26 @@ const removeWhiteSpaces = (value) => (value || '').replace(' ', '');
 export default function EmbeddedCoreSettings() {
   return (
     <>
-      <BasicSettings />
+      <Group title={__('Operation')}><BasicSettings /></Group>
 
+      <Group title={__('Storage and diagnostics')}>
       <SafeModeSetting />
 
-      <SettingsField
+      <SettingsField className="app-setting select-setting"
         connectLabel
         label={__('Verbose level')}
         subLabel={__('Verbose level for logs.')}
         disabled={preRelease}
       >
         {preRelease ? (
-          <TextField
+          <StaticCoreInput
             type="number"
             style={{ maxWidth: 50 }}
             value={3}
             disabled
           />
         ) : (
-          <Form.TextField
+          <CoreInput
             name="verboseLevel"
             type="number"
             min={0}
@@ -52,34 +53,37 @@ export default function EmbeddedCoreSettings() {
         )}
       </SettingsField>
 
-      <SettingsField
+      <SettingsField className="app-setting select-setting"
         connectLabel
         label={__('Core Data Directory')}
         subLabel={__(
           'Where the blockchain data and your legacy wallet.dat are stored'
         )}
       >
-        <Form.TextField name="coreDataDir" />
+        <CoreInput name="coreDataDir" />
       </SettingsField>
 
+      </Group>
+      <Group title={__('Network and API')}>
       <TestnetSettings />
 
       <PortSettings />
 
-      <SettingsField
+      <SettingsField className="app-setting select-setting"
         connectLabel
         label={__('Clear peer connections')}
         subLabel={__('Clear all stored peer connections and restart Nexus')}
       >
-        <Button
+        <CoreButton
           onClick={clearPeerConnections}
           style={{ height: consts.inputHeightEm + 'em' }}
         >
           {__('Clear')}
-        </Button>
+        </CoreButton>
       </SettingsField>
 
-      <AdvancedOptions />
+      </Group>
+      <Group title={__('Advanced')}><AdvancedOptions /></Group>
     </>
   );
 }
@@ -91,7 +95,7 @@ function BasicSettings() {
 
   return (
     <>
-      <SettingsField
+      <SettingsField className="app-setting select-setting"
         connectLabel
         label={__('Lite mode')}
         subLabel={
@@ -118,23 +122,23 @@ function BasicSettings() {
       </SettingsField>
 
       {liteMode && (
-        <SettingsField
+        <SettingsField className="app-setting select-setting"
           connectLabel
           label={__('Resync database')}
           subLabel={__(
             'Delete lite mode database and resynchronize from the beginning'
           )}
         >
-          <Button
+          <CoreButton
             onClick={resyncLiteMode}
             style={{ height: consts.inputHeightEm + 'em' }}
           >
             {__('Resynchronize')}
-          </Button>
+          </CoreButton>
         </SettingsField>
       )}
 
-      <SettingsField
+      <SettingsField className="app-setting select-setting"
         connectLabel
         label={__('Multi-user')}
         subLabel={
@@ -156,7 +160,7 @@ function BasicSettings() {
         )}
       </SettingsField>
 
-      <SettingsField
+      <SettingsField className="app-setting select-setting"
         connectLabel
         label={__('Enable staking')}
         subLabel={
@@ -183,7 +187,7 @@ function BasicSettings() {
           component={({ input: enableStaking }) =>
             !(liteMode || multiUser) &&
             !!enableStaking && (
-              <SettingsField
+              <SettingsField className="app-setting select-setting"
                 connectLabel
                 indent={1}
                 label={__('Pooled staking')}
@@ -197,7 +201,7 @@ function BasicSettings() {
           }
         /> */}
 
-      <SettingsField
+      <SettingsField className="app-setting select-setting"
         connectLabel
         label={__('Enable mining')}
         subLabel={
@@ -220,7 +224,7 @@ function BasicSettings() {
       </SettingsField>
 
       {!(liteMode || multiUser) && !!enableMining && (
-        <SettingsField
+        <SettingsField className="app-setting select-setting"
           connectLabel
           indent={1}
           label={__('Mining IP Whitelist')}
@@ -232,7 +236,7 @@ function BasicSettings() {
             }
           )}
         >
-          <Form.TextField
+          <CoreInput
             name="ipMineWhitelist"
             normalize={removeWhiteSpaces}
             size="12"
@@ -245,7 +249,7 @@ function BasicSettings() {
 
 function SafeModeSetting() {
   return (
-    <SettingsField
+    <SettingsField className="app-setting select-setting"
       connectLabel
       label={__('Safe Mode')}
       subLabel={__(
@@ -283,7 +287,7 @@ function TestnetSettings() {
 
   return (
     <>
-      <SettingsField
+      <SettingsField className="app-setting select-setting"
         connectLabel
         label={__('Testnet Iteration')}
         subLabel={__(
@@ -292,14 +296,14 @@ function TestnetSettings() {
         disabled={!!LOCK_TESTNET}
       >
         {LOCK_TESTNET ? (
-          <TextField
+          <StaticCoreInput
             type="number"
             style={{ maxWidth: 50 }}
             value={LOCK_TESTNET}
             disabled
           />
         ) : (
-          <Form.TextField
+          <CoreInput
             name="testnetIteration"
             type="number"
             min={0}
@@ -314,7 +318,7 @@ function TestnetSettings() {
       </SettingsField>
 
       {!!testnetIteration && testnetIteration !== '0' && (
-        <SettingsField
+        <SettingsField className="app-setting select-setting"
           connectLabel
           indent={1}
           label={__('Private testnet')}
@@ -330,19 +334,19 @@ function TestnetSettings() {
 function PortSettings() {
   return (
     <>
-      <SettingsField
+      <SettingsField className="app-setting select-setting"
         connectLabel
         label={__('API SSL Port')}
         subLabel={__('Nexus API server SSL Port')}
       >
-        <Form.TextField
+        <CoreInput
           name="embeddedCoreApiPortSSL"
           placeholder={defaultConfig.apiPortSSL}
           size="5"
         />
       </SettingsField>
 
-      <SettingsField
+      <SettingsField className="app-setting select-setting"
         connectLabel
         label={__('Use non-SSL Ports')}
         subLabel={__(
@@ -352,13 +356,13 @@ function PortSettings() {
         <Form.Switch name="embeddedCoreUseNonSSL" />
       </SettingsField>
 
-      <SettingsField
+      <SettingsField className="app-setting select-setting"
         connectLabel
         indent={1}
         label={__('API non-SSL Port')}
         subLabel={__('Nexus API server non-SSL Port')}
       >
-        <Form.TextField
+        <CoreInput
           name="embeddedCoreApiPort"
           placeholder={defaultConfig.apiPort}
           size="5"
@@ -373,7 +377,7 @@ function AdvancedOptions() {
 
   return (
     <>
-      <SettingsField
+      <SettingsField className="app-setting select-setting"
         connectLabel
         label={__('Advanced')}
         subLabel={__('Allow advanced core options')}
@@ -382,13 +386,13 @@ function AdvancedOptions() {
       </SettingsField>
 
       {allowAdvancedCoreOptions && (
-        <SettingsField
+        <SettingsField className="app-setting select-setting"
           connectLabel
           indent={1}
           label={__('Core Flags')}
           subLabel={__('Pass these flags to the core on start')}
         >
-          <Form.TextField name="advancedCoreParams" />
+          <CoreInput name="advancedCoreParams" />
         </SettingsField>
       )}
     </>
