@@ -83,12 +83,22 @@ ipcMain.handle(
 );
 
 // Auto update
-ipcMain.handle('check-for-updates', (event, ...args) =>
-  autoUpdater.checkForUpdates(...args)
-);
-ipcMain.handle('quit-and-install-update', (event, ...args) =>
-  autoUpdater.quitAndInstall(...args)
-);
+ipcMain.handle('check-for-updates', async () => {
+  //the full result holds a promise and a cancellation token, which IPC cannot clone
+  const result = await autoUpdater.checkForUpdates();
+  return result
+    ? {
+        updateInfo: result.updateInfo,
+        isUpdateAvailable: result.isUpdateAvailable,
+      }
+    : null;
+});
+ipcMain.handle('quit-and-install-update', () => {
+  //window close is normally prevented, the updater has to be able to quit the app
+  mainWindow?.removeAllListeners('close');
+  //silent install and start the wallet again, so an unattended wallet comes back by itself
+  autoUpdater.quitAndInstall(true, true);
+});
 ipcMain.handle('set-allow-prerelease', (event, value) =>
   setAllowPrerelease(value)
 );

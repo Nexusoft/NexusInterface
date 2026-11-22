@@ -22,7 +22,6 @@ export function initializeUpdater(settings) {
     autoUpdater.allowPrerelease = true;
     autoUpdater.channel = currentChannel;
     autoUpdater.allowDowngrade = false; // We do not have any mechanism to downgrade, as well as there can be issues with your core's chain.
-    autoUpdater.autoDownload = false;
   }
 
   const updaterEvents = [
@@ -36,7 +35,12 @@ export function initializeUpdater(settings) {
   updaterEvents.forEach((eventName) => {
     autoUpdater.on(eventName, (...args) => {
       if (global.mainWindow) {
-        global.mainWindow.webContents.send('updater:' + eventName, ...args);
+        //an Error does not survive IPC, send its message
+        const payload =
+          eventName === 'error'
+            ? args.map((arg) => (arg instanceof Error ? arg.message : arg))
+            : args;
+        global.mainWindow.webContents.send('updater:' + eventName, ...payload);
       }
     });
   });
