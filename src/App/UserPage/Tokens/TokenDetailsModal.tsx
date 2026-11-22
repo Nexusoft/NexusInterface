@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 
 import ControlledModal from 'components/ControlledModal';
 import InfoField from 'components/InfoField';
+import ExplorerLink from 'components/ExplorerLink';
 import QRButton from 'components/QRButton';
 import NewAccountModal from 'components/NewAccountModal';
 import Button from 'components/Button';
@@ -37,11 +38,14 @@ export default function TokenDetailsModal({
   tokenAddress?: string;
 }) {
   const [tokenState, setTokenState] = useState<Token | null>(null);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     if (!tokenProp) {
       callAPI('finance/get/token', {
         address: tokenAddress,
-      }).then(setTokenState);
+      })
+        .then(setTokenState)
+        .catch((e: any) => setError(e?.message || String(e)));
     }
   }, []);
   const token = tokenProp || tokenState;
@@ -52,9 +56,15 @@ export default function TokenDetailsModal({
         <>
           <ControlledModal.Header>{__('Token Details')}</ControlledModal.Header>
           <ControlledModal.Body>
-            {!token && (
+            {!token && !error && (
               <div className="text-center">
                 <Spinner size={24} />
+              </div>
+            )}
+
+            {!token && error && (
+              <div className="text-center" style={{ padding: '1em' }}>
+                {__('Could not load this token')}: {error}
               </div>
             )}
 
@@ -70,6 +80,7 @@ export default function TokenDetailsModal({
                     {token.address || '0'}
                   </span>
                   <QRButton className="ml0_4" address={token.address} />
+                  <ExplorerLink id={token.address} className="ml1" />
                 </InfoField>
                 <InfoField ratio={[1, 2]} label={__('Created at')}>
                   {formatDateTime(token.created * 1000, timeFormatOptions)}

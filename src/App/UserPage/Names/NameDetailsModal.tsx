@@ -5,6 +5,7 @@ import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import InfoField from 'components/InfoField';
+import ExplorerLink from 'components/ExplorerLink';
 import QRButton from 'components/QRButton';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
@@ -78,10 +79,12 @@ export default function NameDetailsModal({
             <InfoField label={__('Address')}>
               <span className="v-align monospace">{nameRecord.address}</span>
               <QRButton className="ml0_4" address={nameRecord.address} />
+              <ExplorerLink id={nameRecord.address} className="ml1" />
             </InfoField>
             <InfoField label={__('Points to')}>
               <span className="v-align monospace">{nameRecord.register}</span>
               <QRButton className="ml0_4" address={nameRecord.register} />
+              <ExplorerLink id={nameRecord.register} className="ml1" />
             </InfoField>
             <InfoField label={__('Created at')}>
               {formatDateTime(nameRecord.created * 1000, timeFormatOptions)}

@@ -173,7 +173,9 @@ export default function TruncateMiddleAddress({
             </AddressCopy>
             <Ellipsis hidden={!overflown}>...</Ellipsis>
             <AddressCopy right overflown={overflown}>
-              {address}
+              {/* same nowrap as the left copy: without it the end of a long value wraps into a block instead of
+                  showing a single clipped "...end" line next to the ellipsis */}
+              <AddressContent>{address}</AddressContent>
             </AddressCopy>
           </Address>
         </AddressWrapper>

@@ -10,7 +10,7 @@ import { TextField } from 'components/TextField';
 import RequireLoggedIn from 'components/RequireLoggedIn';
 // import Spinner from 'components/Spinner';
 import Icon from 'components/Icon';
-import { pageAtom, transactionsQuery } from 'lib/transactions';
+import { pageAtom, transactionsQuery, txCountPerPage } from 'lib/transactions';
 import transactionIcon from 'icons/transaction.svg';
 import warningIcon from 'icons/warning.svg';
 
@@ -130,6 +130,8 @@ export default function Transactions() {
     isError,
   } = useAtomValue(transactionsQuery.queryAtom);
   const [page, setPage] = useAtom(pageAtom);
+  //a short page means there is no next one; 10 items may still be the last page
+  const isLastPage = !transactions || transactions.length < txCountPerPage;
   useEffect(() => {
     UT.SendScreen('Transactions');
   }, []);
@@ -211,13 +213,13 @@ export default function Transactions() {
               </div>
               <PaginationButton
                 skin="filled-inverted"
-                // disabled={page >= totalPages}
+                disabled={isLastPage}
                 onClick={
-                  // page < totalPages ?
-                  () => {
-                    setPage(page + 1);
-                  }
-                  // : undefined
+                  isLastPage
+                    ? undefined
+                    : () => {
+                        setPage(page + 1);
+                      }
                 }
               >
                 {__('Next')} &gt;

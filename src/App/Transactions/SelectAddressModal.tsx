@@ -142,7 +142,7 @@ export default function SelectAddressModal({
                       addressInfo.label
                         ? `${addressInfo.name} - ${addressInfo.label}`
                         : addressInfo.isMine
-                        ? __('My address for %{name}')
+                        ? __('My address for %{name}', { name: addressInfo.name })
                         : __("%{name}'s address", {
                             name: addressInfo.name,
                           })

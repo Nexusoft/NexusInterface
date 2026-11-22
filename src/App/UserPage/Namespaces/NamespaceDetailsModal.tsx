@@ -1,6 +1,7 @@
 import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import InfoField from 'components/InfoField';
+import ExplorerLink from 'components/ExplorerLink';
 import QRButton from 'components/QRButton';
 import { formatDateTime } from 'lib/intl';
 import { openModal } from 'lib/ui';
@@ -37,6 +38,7 @@ export default function NamespaceDetailsModal({
             <InfoField label={__('Address')}>
               <span className="v-align">{namespace.address}</span>
               <QRButton className="ml0_4" address={namespace.address} />
+              <ExplorerLink id={namespace.address} className="ml1" />
             </InfoField>
             <InfoField label={__('Created at')}>
               {formatDateTime(namespace.created * 1000, timeFormatOptions)}

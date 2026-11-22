@@ -25,6 +25,15 @@ const timeFormat: Intl.DateTimeFormatOptions = {
 };
 const dayFormat: Intl.DateTimeFormatOptions = { day: '2-digit' };
 const monthFormat: Intl.DateTimeFormatOptions = { month: 'short' };
+const monthYearFormat: Intl.DateTimeFormatOptions = {
+  month: 'short',
+  year: 'numeric',
+};
+const shortTimeFormat: Intl.DateTimeFormatOptions = {
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+};
 
 const TransactionComponent = styled.div<{ unconfirmed?: boolean }>(
   ({ theme }) => ({
@@ -91,6 +100,12 @@ const Month = styled.div({
   fontSize: 14,
 });
 
+const ShortTime = styled.div(({ theme }) => ({
+  fontSize: 12,
+  marginTop: 2,
+  color: theme.mixer(0.75),
+}));
+
 const TransactionRight = styled.div({
   flexBasis: 0,
   flexGrow: 1,
@@ -136,7 +151,15 @@ export default function Transaction({
           <ShortDate>
             <div>
               <Day>{formatDateTime(txTime, dayFormat)}</Day>
-              <Month>{formatDateTime(txTime, monthFormat)}</Month>
+              <Month>
+                {formatDateTime(
+                  txTime,
+                  txTime.getFullYear() === new Date().getFullYear()
+                    ? monthFormat
+                    : monthYearFormat
+                )}
+              </Month>
+              <ShortTime>{formatDateTime(txTime, shortTimeFormat)}</ShortTime>
             </div>
           </ShortDate>
         </TransactionDate>

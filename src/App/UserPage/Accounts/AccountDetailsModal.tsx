@@ -1,6 +1,7 @@
 import ControlledModal from 'components/ControlledModal';
 import Button from 'components/Button';
 import InfoField from 'components/InfoField';
+import ExplorerLink from 'components/ExplorerLink';
 import AdjustStakeModal from 'components/AdjustStakeModal';
 import QRButton from 'components/QRButton';
 import TokenName from 'components/TokenName';
@@ -105,6 +106,7 @@ export default function AccountDetailsModal({ account }: { account: Account }) {
             <InfoField ratio={[1, 2]} label={__('Address')}>
               <span className="monospace v-align">{account.address}</span>
               <QRButton address={account.address} className="ml0_4" />
+              <ExplorerLink id={account.address} className="ml1" />
             </InfoField>
 
             {account.stake !== undefined && (
