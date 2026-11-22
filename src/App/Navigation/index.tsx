@@ -100,7 +100,6 @@ const ModuleNavItem = ({
   <Tooltip.Trigger tooltip={module.info.displayName} position="top">
     <NavLinkItem to={`/Modules/${module.info.name}`}>
       <ModuleIcon module={module} />
-      <NavLabel>{module.info.displayName}</NavLabel>
       {!!badge && <Badge>{badge}</Badge>}
     </NavLinkItem>
   </Tooltip.Trigger>
