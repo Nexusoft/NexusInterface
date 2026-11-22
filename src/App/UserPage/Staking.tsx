@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 
 import Button from 'components/Button';
+import WaitingMessage from 'components/WaitingMessage';
 import AdjustStakeModal from 'components/AdjustStakeModal';
 import ConfirmDialog from 'components/Dialogs/ConfirmDialog';
 import { store } from 'lib/store';
@@ -56,7 +57,7 @@ const BalanceTooltip = (staking: boolean) =>
         'The current NXS balance of the trust account that is not staked. You can spend this amount without affecting your Trust Score'
       )
     : __(
-        'Balance that will be staked after the 72 holding period, any change to this balance will reset the hold timer'
+        'Balance that will be staked after the 72 hour holding period, any change to this balance will reset the hold timer'
       );
 
 function promptForStakeAmount() {
@@ -227,7 +228,7 @@ export default function Staking() {
   }
 
   if (!stakeInfo) {
-    return null;
+    return <WaitingMessage>{__('Loading staking information...')}</WaitingMessage>;
   }
 
   return (

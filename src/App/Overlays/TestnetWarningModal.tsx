@@ -13,9 +13,7 @@ export default function TestnetWarningModal(props: ModalProps) {
             <div className="text-center">{versionRunning}</div>
 
             <div className="mt1 text-center">
-              {__(
-                `You are currenctly running a Testnet only version of the wallet. `
-              )}
+              {__('You are currently running a Testnet only version of the wallet.')}
             </div>
 
             <div className="mt1 text-center">
@@ -36,7 +34,7 @@ export default function TestnetWarningModal(props: ModalProps) {
                 {__('Click here')}
               </Button>
               {__(' To send feedback to the developers. ')}
-              {__('Or join us on the offical ')}
+              {__('Or join us on the official ')}
               <Button
                 skin="plain-link-primary"
                 onClick={() =>

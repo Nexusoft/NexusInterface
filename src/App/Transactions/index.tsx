@@ -162,6 +162,11 @@ export default function Transactions() {
                   ))}
               </Container>
             )}
+            {!isPending && !isError && transactions?.length === 0 && (
+              <div className="text-center dim" style={{ padding: '2em' }}>
+                {__('No transactions yet')}
+              </div>
+            )}
           </TransactionsList>
           <Pagination>
             {' '}

@@ -1,5 +1,5 @@
 // External
-import { useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { useAtomValue } from 'jotai';
 import styled from '@emotion/styled';
 
@@ -135,40 +135,6 @@ const getInitialValues = (() => {
   };
 })();
 
-/**
- * Confirms turning off Remote Core
- */
-async function turnOffRemoteCore(restartForm: () => void) {
-  const confirmed = await confirm({
-    question: __('Exit remote Core mode?'),
-    note: __('(This will restart your Core)'),
-  });
-  if (confirmed) {
-    restartForm();
-    await startCore();
-    updateSettings({ manualDaemon: false });
-    coreInfoQuery.refetch();
-  }
-}
-
-/**
- * Confirms turning on Remote Core
- */
-async function turnOnRemoteCore(restartForm: () => void) {
-  const confirmed = await confirm({
-    question: __('Enter remote Core mode?'),
-    note: __(
-      '(Remote core will continue to run, but internal core will restart)'
-    ),
-  });
-  if (confirmed) {
-    restartForm();
-    await stopCore();
-    updateSettings({ manualDaemon: true });
-    coreInfoQuery.refetch();
-  }
-}
-
 export default function SettingsCore() {
   useSettingsTab('Core');
   const switchId = useId();
@@ -177,6 +143,51 @@ export default function SettingsCore() {
   const [restartCoreOnSave, setRestartCoreOnSave] = useState(true);
   const handleRestartSwitch = () => {
     setRestartCoreOnSave(!restartCoreOnSave);
+  };
+
+  const [switchingCore, setSwitchingCore] = useState(false);
+  const switchingRef = useRef(false);
+
+  const switchToEmbedded = async (restartForm: () => void) => {
+    if (switchingRef.current) return;
+    switchingRef.current = true;
+    setSwitchingCore(true);
+    try {
+      const confirmed = await confirm({
+        question: __('Exit remote Core mode?'),
+        note: __('(This will restart your Core)'),
+      });
+      if (!confirmed) return;
+      restartForm();
+      await startCore();
+      updateSettings({ manualDaemon: false });
+      coreInfoQuery.refetch();
+    } finally {
+      switchingRef.current = false;
+      setSwitchingCore(false);
+    }
+  };
+
+  const switchToRemote = async (restartForm: () => void) => {
+    if (switchingRef.current) return;
+    switchingRef.current = true;
+    setSwitchingCore(true);
+    try {
+      const confirmed = await confirm({
+        question: __('Enter remote Core mode?'),
+        note: __(
+          '(Remote core will continue to run, but internal core will restart)'
+        ),
+      });
+      if (!confirmed) return;
+      restartForm();
+      await stopCore();
+      updateSettings({ manualDaemon: true });
+      coreInfoQuery.refetch();
+    } finally {
+      switchingRef.current = false;
+      setSwitchingCore(false);
+    }
   };
 
   return (
@@ -211,9 +222,10 @@ export default function SettingsCore() {
               <EmbeddedMode
                 skin={manualDaemon ? 'default' : 'filled-primary'}
                 active={!manualDaemon}
+                disabled={switchingCore}
                 onClick={
                   manualDaemon
-                    ? () => turnOffRemoteCore(form.restart)
+                    ? () => switchToEmbedded(form.restart)
                     : undefined
                 }
               >
@@ -222,10 +234,9 @@ export default function SettingsCore() {
               <ManualMode
                 skin={manualDaemon ? 'filled-primary' : 'default'}
                 active={manualDaemon}
+                disabled={switchingCore}
                 onClick={
-                  manualDaemon
-                    ? undefined
-                    : () => turnOnRemoteCore(form.restart)
+                  manualDaemon ? undefined : () => switchToRemote(form.restart)
                 }
               >
                 {__('Remote Core')}

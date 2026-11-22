@@ -5,7 +5,6 @@ import { alphaRelease } from 'consts/misc';
 
 export default function PreReleaseWarningModal(props: ModalProps) {
   const versionRunning = APP_VERSION.toString();
-  const releaseType = alphaRelease ? 'Alpha' : 'Beta';
   return (
     <Modal maxWidth={600} {...props}>
       {(closeModal) => (
@@ -15,9 +14,9 @@ export default function PreReleaseWarningModal(props: ModalProps) {
             <div className="text-center">{versionRunning}</div>
 
             <div className="mt1 text-center">
-              {__(
-                `You are currenctly running a ${releaseType} version of the wallet. `
-              )}
+              {alphaRelease
+                ? __('You are currently running an Alpha version of the wallet.')
+                : __('You are currently running a Beta version of the wallet.')}
             </div>
             <div className="mt1 text-center">
               {__('Thank you for testing our wallet, please ')}
@@ -32,7 +31,7 @@ export default function PreReleaseWarningModal(props: ModalProps) {
                 {__('Click here')}
               </Button>
               {__(' To send feedback to the developers. ')}
-              {__('Or join us on the offical ')}
+              {__('Or join us on the official ')}
               <Button
                 skin="plain-link-primary"
                 onClick={() =>

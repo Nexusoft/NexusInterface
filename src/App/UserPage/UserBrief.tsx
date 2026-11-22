@@ -25,6 +25,7 @@ const Username = styled.div(({ theme }) => ({
   textAlign: 'center',
   fontSize: 30,
   padding: '20px 0',
+  overflowWrap: 'anywhere',
 }));
 
 const Genesis = styled.div({
