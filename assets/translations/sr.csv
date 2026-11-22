@@ -1131,3 +1131,6 @@
 "Latency %{ms} ms","Кашњење %{ms} ms","Overview"
 "to %{name}","за %{name}","Overview"
 "from %{name}","од %{name}","Overview"
+"Local account name belonging to another user","Локални назив налога који припада другом кориснику","Transactions"
+"Could not load this token","Овај токен није могао да се учита","User.Tokens.TokenDetails"
+"Contracts","Уговори","TransactionDetails"

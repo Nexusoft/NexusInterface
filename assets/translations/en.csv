@@ -1136,3 +1136,6 @@ incoming,incoming,Overview
 Latency %{ms} ms,Latency %{ms} ms,Overview
 to %{name},to %{name},Overview
 from %{name},from %{name},Overview
+Local account name belonging to another user,Local account name belonging to another user,Transactions
+Could not load this token,Could not load this token,User.Tokens.TokenDetails
+Contracts,Contracts,TransactionDetails

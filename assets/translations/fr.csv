@@ -1128,3 +1128,6 @@
 "Latency %{ms} ms","Latence %{ms} ms","Overview"
 "to %{name}","à %{name}","Overview"
 "from %{name}","de %{name}","Overview"
+"Local account name belonging to another user","Nom de compte local appartenant à un autre utilisateur","Transactions"
+"Could not load this token","Impossible de charger ce jeton","User.Tokens.TokenDetails"
+"Contracts","Contrats","TransactionDetails"

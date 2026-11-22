@@ -1136,3 +1136,6 @@
 "Latency %{ms} ms","Latencija %{ms} ms","Overview"
 "to %{name}","za %{name}","Overview"
 "from %{name}","od %{name}","Overview"
+"Local account name belonging to another user","Lokalni naziv računa koji pripada drugom korisniku","Transactions"
+"Could not load this token","Ovaj token nije moguće učitati","User.Tokens.TokenDetails"
+"Contracts","Ugovori","TransactionDetails"

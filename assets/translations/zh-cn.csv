@@ -1130,3 +1130,6 @@
 "Latency %{ms} ms","延迟 %{ms} 毫秒","Overview"
 "to %{name}","至 %{name}","Overview"
 "from %{name}","来自 %{name}","Overview"
+"Local account name belonging to another user","属于其他用户的本地账户名称","Transactions"
+"Could not load this token","无法加载此代币","User.Tokens.TokenDetails"
+"Contracts","合约","TransactionDetails"

@@ -1131,3 +1131,6 @@
 "Latency %{ms} ms","Viive %{ms} ms","Overview"
 "to %{name}","vastaanottaja %{name}","Overview"
 "from %{name}","lähettäjä %{name}","Overview"
+"Local account name belonging to another user","Toisen käyttäjän paikallinen tilin nimi","Transactions"
+"Could not load this token","Tätä tokenia ei voitu ladata","User.Tokens.TokenDetails"
+"Contracts","Sopimukset","TransactionDetails"

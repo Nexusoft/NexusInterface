@@ -1127,3 +1127,6 @@
 "Latency %{ms} ms","Forsinkelse %{ms} ms","Overview"
 "to %{name}","til %{name}","Overview"
 "from %{name}","fra %{name}","Overview"
+"Local account name belonging to another user","Lokalt kontonavn som tilhører en annen bruker","Transactions"
+"Could not load this token","Kunne ikke laste dette tokenet","User.Tokens.TokenDetails"
+"Contracts","Kontrakter","TransactionDetails"

@@ -1135,3 +1135,6 @@
 "Latency %{ms} ms","Задержка %{ms} мс","Overview"
 "to %{name}","кому: %{name}","Overview"
 "from %{name}","от: %{name}","Overview"
+"Local account name belonging to another user","Локальное имя счёта другого пользователя","Transactions"
+"Could not load this token","Не удалось загрузить этот токен","User.Tokens.TokenDetails"
+"Contracts","Контракты","TransactionDetails"

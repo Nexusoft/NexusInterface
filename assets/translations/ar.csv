@@ -1127,3 +1127,6 @@
 "Latency %{ms} ms","زمن الاستجابة %{ms} مللي ثانية","Overview"
 "to %{name}","إلى %{name}","Overview"
 "from %{name}","من %{name}","Overview"
+"Local account name belonging to another user","اسم حساب محلي يخص مستخدمًا آخر","Transactions"
+"Could not load this token","تعذر تحميل هذا الرمز المميز","User.Tokens.TokenDetails"
+"Contracts","العقود","TransactionDetails"

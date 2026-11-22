@@ -1130,3 +1130,6 @@
 "Latency %{ms} ms","Latență %{ms} ms","Overview"
 "to %{name}","către %{name}","Overview"
 "from %{name}","de la %{name}","Overview"
+"Local account name belonging to another user","Nume de cont local care aparține altui utilizator","Transactions"
+"Could not load this token","Acest token nu a putut fi încărcat","User.Tokens.TokenDetails"
+"Contracts","Contracte","TransactionDetails"

@@ -1131,3 +1131,6 @@
 "Latency %{ms} ms","Késleltetés %{ms} ms","Overview"
 "to %{name}","címzett: %{name}","Overview"
 "from %{name}","küldő: %{name}","Overview"
+"Local account name belonging to another user","Másik felhasználóhoz tartozó helyi fióknév","Transactions"
+"Could not load this token","Ezt a tokent nem sikerült betölteni","User.Tokens.TokenDetails"
+"Contracts","Szerződések","TransactionDetails"

@@ -1135,3 +1135,6 @@
 "Latency %{ms} ms","지연 시간 %{ms}ms","Overview"
 "to %{name}","받는 곳 %{name}","Overview"
 "from %{name}","보낸 곳 %{name}","Overview"
+"Local account name belonging to another user","다른 사용자의 로컬 계정 이름","Transactions"
+"Could not load this token","이 토큰을 불러올 수 없습니다","User.Tokens.TokenDetails"
+"Contracts","컨트랙트","TransactionDetails"

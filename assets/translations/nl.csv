@@ -1131,3 +1131,6 @@
 "Latency %{ms} ms","Latentie %{ms} ms","Overview"
 "to %{name}","aan %{name}","Overview"
 "from %{name}","van %{name}","Overview"
+"Local account name belonging to another user","Lokale accountnaam van een andere gebruiker","Transactions"
+"Could not load this token","Kan dit token niet laden","User.Tokens.TokenDetails"
+"Contracts","Contracten","TransactionDetails"

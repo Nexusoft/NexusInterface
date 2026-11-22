@@ -1135,3 +1135,6 @@
 "Latency %{ms} ms","レイテンシ %{ms} ms","Overview"
 "to %{name}","宛先 %{name}","Overview"
 "from %{name}","送信元 %{name}","Overview"
+"Local account name belonging to another user","別のユーザーのローカルアカウント名","Transactions"
+"Could not load this token","このトークンを読み込めませんでした","User.Tokens.TokenDetails"
+"Contracts","コントラクト","TransactionDetails"
