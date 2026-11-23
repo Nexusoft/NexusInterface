@@ -12,6 +12,7 @@ import {
 import { settingsAtom } from 'lib/settings';
 import { restartCore, startCore } from 'lib/core';
 import { showNotification } from 'lib/ui';
+import sleep from 'utils/sleep';
 
 __ = __context('CoreHealth');
 
@@ -20,6 +21,7 @@ __ = __context('CoreHealth');
 const stuckMinutes = 15;
 const stuckBehindBlocks = 10;
 const checkSeconds = 30;
+const freshInfoSeconds = 20;
 //doubles after each restart that did not help, back to the first gap once blocks move
 const restartGapMinutes = 30;
 const maxRestartGapMinutes = 240;
@@ -125,6 +127,13 @@ async function check() {
       store.set(coreStuckAtom, null);
       return;
     }
+    //judge on a fresh answer, never on info kept from before
+    const since = lastChangeAt;
+    const fresh = await Promise.race([
+      callAPI('system/get/info').catch(() => null),
+      sleep(freshInfoSeconds * 1000).then(() => null),
+    ]);
+    const blocks = Math.max(Number(fresh?.blocks) || 0, info.blocks);
     //most peers answer height 0; take the second best so one odd peer cannot trigger a restart
     const peers = await callAPI('system/list/peers').catch(() => []);
     const heights = (Array.isArray(peers) ? peers : [])
@@ -132,16 +141,16 @@ async function check() {
       .filter((h) => h > 0)
       .sort((a, b) => b - a);
     const network = heights.length >= 2 ? heights[1] : 0;
-    if (network - info.blocks < stuckBehindBlocks) {
+    if (lastChangeAt !== since || network - blocks < stuckBehindBlocks) {
       store.set(coreStuckAtom, null);
       return;
     }
-    const stuck = { blocks: info.blocks, network, since: lastChangeAt };
+    const stuck = { blocks, network, since: lastChangeAt };
     const was = store.get(coreStuckAtom);
     store.set(coreStuckAtom, stuck);
     if (!was) {
       log.warn(
-        `CoreHealth - core stuck at ${info.blocks}, peers at ${network}, no block for ${Math.round(
+        `CoreHealth - core stuck at ${blocks}, peers at ${network}, no block for ${Math.round(
           (Date.now() - lastChangeAt) / 60000
         )} min`
       );
@@ -163,7 +172,7 @@ async function check() {
     showNotification(
       __(
         'Nexus Core stopped at block %{blocks} while the network is at %{network}. Restarting the core...',
-        { blocks: info.blocks, network }
+        { blocks, network }
       ),
       'work'
     );
