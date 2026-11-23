@@ -12,10 +12,12 @@ export interface RequestSample {
   //false = no answer at all (timeout, refused, dropped), an API error still counts as answered
   answered: boolean;
 }
-let requestListener: ((sample: RequestSample) => void) | null = null;
-export function setRequestListener(listener: typeof requestListener) {
-  requestListener = listener;
+const requestListeners: ((sample: RequestSample) => void)[] = [];
+export function addRequestListener(listener: (sample: RequestSample) => void) {
+  requestListeners.push(listener);
 }
+const notifyRequest = (sample: RequestSample) =>
+  requestListeners.forEach((listener) => listener(sample));
 
 const getDefaultOptions = ({
   apiSSL,
@@ -807,10 +809,10 @@ async function callAPI(endpoint: string, customParams?: Record<string, any>) {
   const start = Date.now();
   try {
     const result = await sendRequest({ params, options, ssl: conf.apiSSL });
-    requestListener?.({ endpoint, ms: Date.now() - start, answered: true });
+    notifyRequest({ endpoint, ms: Date.now() - start, answered: true });
     return result;
   } catch (err: any) {
-    requestListener?.({
+    notifyRequest({
       endpoint,
       ms: Date.now() - start,
       answered: typeof err?.code === 'number',

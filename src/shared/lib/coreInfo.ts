@@ -21,6 +21,8 @@ export const coreInfoQuery = jotaiQuery<CoreInfo>({
     retryDelay: (attempt) => 500 + attempt * 1000,
     staleTime: 600000, // 10 minutes
     refetchInterval: 10000, // 10 seconds
+    //core health and staking status need it while the window is hidden or covered too
+    refetchIntervalInBackground: true,
     refetchOnWindowFocus: 'always',
     refetchOnReconnect: 'always',
     placeholderData: (previousData) => previousData,

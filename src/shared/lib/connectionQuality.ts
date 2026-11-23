@@ -1,7 +1,7 @@
 import { atom } from 'jotai';
 
 import { store } from 'lib/store';
-import { callAPI, setRequestListener, RequestSample } from 'lib/api';
+import { callAPI, addRequestListener, RequestSample } from 'lib/api';
 import { coreInfoQuery } from 'lib/coreInfo';
 import { lastBlockAt, restartsToday } from 'lib/coreHealth';
 
@@ -184,7 +184,7 @@ function update() {
 }
 
 export function prepareConnectionQuality() {
-  setRequestListener((sample) => {
+  addRequestListener((sample) => {
     samples.push({ ...sample, at: Date.now() });
   });
   loadPeers();
