@@ -6,6 +6,19 @@ import { coreInfoQuery } from 'lib/coreInfo';
 import { activeSessionIdAtom } from 'lib/session';
 import { store } from 'lib/store';
 
+export interface RequestSample {
+  endpoint: string;
+  ms: number;
+  //false = no answer at all (timeout, refused, dropped), an API error still counts as answered
+  answered: boolean;
+}
+const requestListeners: ((sample: RequestSample) => void)[] = [];
+export function addRequestListener(listener: (sample: RequestSample) => void) {
+  requestListeners.push(listener);
+}
+const notifyRequest = (sample: RequestSample) =>
+  requestListeners.forEach((listener) => listener(sample));
+
 const getDefaultOptions = ({
   apiSSL,
   ip,
@@ -793,7 +806,19 @@ async function callAPI(endpoint: string, customParams?: Record<string, any>) {
     path: `/${endpoint}`,
     ...getDefaultOptions(conf),
   };
-  return await sendRequest({ params, options, ssl: conf.apiSSL });
+  const start = Date.now();
+  try {
+    const result = await sendRequest({ params, options, ssl: conf.apiSSL });
+    notifyRequest({ endpoint, ms: Date.now() - start, answered: true });
+    return result;
+  } catch (err: any) {
+    notifyRequest({
+      endpoint,
+      ms: Date.now() - start,
+      answered: typeof err?.code === 'number',
+    });
+    throw err;
+  }
 }
 export { callAPI };
 
