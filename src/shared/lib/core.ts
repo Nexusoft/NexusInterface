@@ -13,6 +13,9 @@ import fs from 'fs';
 import { rm as deleteDirectory } from 'fs/promises';
 import * as path from 'path';
 
+const killWaitSeconds = 30;
+const stopAnswerSeconds = 15;
+
 /**
  * Start Nexus Core
  */
@@ -145,7 +148,11 @@ export const stopCore = async (forRestart?: boolean) => {
   log.info('Core Manager: Stop function called');
   const { manualDaemon } = store.get(settingsAtom);
   try {
-    await callAPI('system/stop');
+    //a hung core never answers the stop, go on to the kill after a short wait
+    await Promise.race([
+      callAPI('system/stop').catch(() => {}),
+      sleep(stopAnswerSeconds * 1000),
+    ]);
 
     // Wait for core to gracefully stop for 10 seconds
     let coreStillRunning;
@@ -164,6 +171,17 @@ export const stopCore = async (forRestart?: boolean) => {
 
     if (coreStillRunning) {
       await ipcRenderer.invoke('kill-core-process');
+      //a hung core can take a while to exit, starting before that skips the start
+      for (let i = 0; i < killWaitSeconds; i++) {
+        await sleep(1000);
+        if (!(await ipcRenderer.invoke('check-core-running'))) {
+          log.info(`Core Manager: Core exited ${i + 1} seconds after kill`);
+          break;
+        }
+        if (i === killWaitSeconds - 1) {
+          log.warn('Core Manager: Core still running after kill');
+        }
+      }
     }
   } catch (err) {}
 

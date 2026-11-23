@@ -194,12 +194,14 @@ export function prepareSessionInfo() {
       });
       // Query has just finished, userStatusQuery and loggedInAtom haven't been updated yet
       const loggedIn = !!userStatus;
-      const { locale, firstCreateNewUserShown } = store.get(settingsAtom);
+      const { locale, firstCreateNewUserShown, pendingRegistration } =
+        store.get(settingsAtom);
       // The wallet will have to refresh after language is chosen
       // So NewUser modal shouldn't be visible now
       if (
         locale &&
         !loggedIn &&
+        !pendingRegistration &&
         !isModalOpen(LoginModal) &&
         !isModalOpen(NewUserModal)
       ) {

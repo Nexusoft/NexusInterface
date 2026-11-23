@@ -4,6 +4,7 @@ import { consts, timing, animations } from 'styles';
 
 import StakingStatus from './StakingStatus';
 import SyncStatus from './SyncStatus';
+import ConnectionStatus from './ConnectionStatus';
 import UserControl from './UserControl';
 
 const StatusIconsComponent = styled.div({
@@ -19,6 +20,7 @@ const StatusIconsComponent = styled.div({
 export default function StatusIcons() {
   return (
     <StatusIconsComponent>
+      <ConnectionStatus />
       <SyncStatus />
       <StakingStatus />
       <UserControl />
