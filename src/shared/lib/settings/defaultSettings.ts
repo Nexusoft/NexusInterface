@@ -92,6 +92,12 @@ export type Settings = {
   // If false, show Create new user modal instead of Login
   // modal automatically when core is connected
   firstCreateNewUserShown: boolean;
+  //account sent with profiles/create/master, waiting for its first block
+  pendingRegistration: {
+    username: string;
+    startedAt: number;
+    confirmedAt?: number;
+  } | null;
   consoleCliSyntax: boolean;
   dontAskToStartStaking: boolean;
   lastCheckForUpdates: number | undefined;
@@ -174,6 +180,7 @@ export const defaultSettings: Settings = {
   // If false, show Create new user modal instead of Login
   // modal automatically when core is connected
   firstCreateNewUserShown: false,
+  pendingRegistration: null,
   consoleCliSyntax: true,
   dontAskToStartStaking: false,
   lastCheckForUpdates: undefined,

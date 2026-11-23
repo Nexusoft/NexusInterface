@@ -21,6 +21,8 @@ export const coreInfoQuery = jotaiQuery<CoreInfo>({
     retryDelay: (attempt) => 500 + attempt * 1000,
     staleTime: 600000, // 10 minutes
     refetchInterval: 10000, // 10 seconds
+    //core health and staking status need it while the window is hidden or covered too
+    refetchIntervalInBackground: true,
     refetchOnWindowFocus: 'always',
     refetchOnReconnect: 'always',
     placeholderData: (previousData) => previousData,
@@ -33,8 +35,15 @@ export const liteModeAtom = atom(
   (get) => get(coreInfoQuery.valueAtom)?.litemode
 );
 
+/** Set by lib/coreHealth when the core stopped taking blocks while peers are ahead */
+export const coreStuckAtom = atom<{
+  blocks: number;
+  network: number;
+  since: number;
+} | null>(null);
+
 export const synchronizedAtom = atom(
-  (get) => !get(coreInfoQuery.valueAtom)?.syncing
+  (get) => !get(coreInfoQuery.valueAtom)?.syncing && !get(coreStuckAtom)
 );
 
 export const blocksAtom = atom((get) => get(coreInfoQuery.valueAtom)?.blocks);

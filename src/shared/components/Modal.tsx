@@ -13,6 +13,7 @@
 import {
   useEffect,
   useRef,
+  useState,
   ReactNode,
   ComponentProps,
   ForwardedRef,
@@ -22,6 +23,7 @@ import { keyframes } from '@emotion/react';
 
 // Internal
 import Overlay from 'components/Overlay';
+import ModalLockContext from 'context/modalLock';
 import { timing } from 'styles';
 import { refs } from 'utils/misc';
 
@@ -133,8 +135,10 @@ const ModalFooter = styled.div<{ separator?: boolean }>(
     }
 );
 
-export interface ModalProps
-  extends Omit<ComponentProps<typeof ModalComponent>, 'children'> {
+export interface ModalProps extends Omit<
+  ComponentProps<typeof ModalComponent>,
+  'children'
+> {
   visible?: boolean;
   removeModal: () => void;
   onClose?: () => void;
@@ -163,6 +167,7 @@ export default function Modal({
   ...rest
 }: ModalProps) {
   const modalElem = useRef<HTMLDivElement>();
+  const [locked, setLocked] = useState(false);
   const backgroundElem = useRef<HTMLDivElement>();
   const closeWithAnimation = () =>
     new Promise<void>((resolve) => {
@@ -195,7 +200,11 @@ export default function Modal({
     <Overlay
       dimBackground={dimBackground}
       onBackgroundClick={
-        onBackgroundClick === undefined ? closeWithAnimation : onBackgroundClick
+        locked
+          ? () => {}
+          : onBackgroundClick === undefined
+            ? closeWithAnimation
+            : onBackgroundClick
       }
       backgroundRef={refs(backgroundElem, backgroundRef)}
       zPriority={fullScreen ? 1 : 0}
@@ -208,7 +217,7 @@ export default function Modal({
         onKeyDown={
           escToClose
             ? (e) => {
-                if (e.key === 'Escape') {
+                if (e.key === 'Escape' && !locked) {
                   closeWithAnimation();
                 }
               }
@@ -216,9 +225,11 @@ export default function Modal({
         }
         {...rest}
       >
-        {typeof children === 'function'
-          ? children(closeWithAnimation)
-          : children}
+        <ModalLockContext.Provider value={setLocked}>
+          {typeof children === 'function'
+            ? children(closeWithAnimation)
+            : children}
+        </ModalLockContext.Provider>
       </ModalComponent>
     </Overlay>
   );
