@@ -1,3 +1,11 @@
+# 3.2.3-beta.4 (2026.11.27)
+
+This prerelease is for continued testing, not a production release.
+
+- Update the embedded Linux, macOS, and Windows x64 nodes to LLL-TAO
+  5.1.7-rc6 build 4, including mining-readiness fixes and sync height logging.
+- Improve renderer startup and address interface review regressions.
+
 # 3.2.3-beta.3 (2026.11.17)
 
 This prerelease is for continued testing, not a production release.
