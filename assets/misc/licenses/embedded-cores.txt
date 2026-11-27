@@ -3,19 +3,18 @@ Embedded Nexus cores - third-party notices and source
 These binaries include Berkeley DB 5.3, OpenSSL, and GCC runtime components.
 See the adjacent license files for their copyright notices and license terms.
 
-Nexus core version: 5.1.7-rc6 build 3
+Nexus core version: 5.1.7-rc6 build 4
 SHA-256:
-  Linux x64:   bb4fcff0b5f30c68cb7e15421c0b1a44c054ea1f3538c9aff3bb476c00c0c48a
-  macOS x64:   8746463f2cee90d0725e4b67328ff706f8eb5843e98f523f96da3b5ac07fff5c
-  Windows x64: 1abaac26555e9f8d3a78c3aa7ab937a6605433a2b21789b6a93669a10e36f624
+  Linux x64:   bd950076c965f6f8010b8ac05e6375cdfdbe38e5c812a819cd33d672290136b3
+  macOS x64:   45c397e58b2b462ab42254b7203f7ddf555c6a5b14a100414c02e00fee4f3007
+  Windows x64: 7bbfe405ff31877eddb6a647ec91df4a867500b531b100b5daa2ee45318b83d2
 
 The Nexus core source used for all three binaries is:
-https://github.com/NamecoinGithub/LLL-TAO/tree/2a3c58e8e90a7c7bad52aa8d59cc25f3c626af1b
+https://github.com/NamecoinGithub/LLL-TAO/tree/9ac000957b34151f77a3cc12be80ea2ad77bbd90
 
 The Interface build workflows and Linux build script contain the commands and
 patches used to build the binaries:
-Linux/macOS: https://github.com/NamecoinGithub/NexusInterface/tree/8f3c5f74be52b87efd2a299ad32c638d87729a81/.github
-Windows: https://github.com/NamecoinGithub/NexusInterface/blob/d9e8be581309eed23b465023c98b15d54f2fc949/.github/workflows/build-embedded-core-windows.yml
+https://github.com/NamecoinGithub/NexusInterface/tree/35845a51f4d47fdd559255356ad0f9fa0db9aaa5/.github
 
 Dependency source:
 - Berkeley DB 5.3.28: https://download.oracle.com/berkeley-db/db-5.3.28.tar.gz
@@ -28,6 +27,6 @@ Dependency source:
 
 The corresponding Windows dependency package versions and the Linux container
 image digest are recorded in the associated build workflow logs.
-Linux: https://github.com/NamecoinGithub/NexusInterface/actions/runs/44010126262
-macOS: https://github.com/NamecoinGithub/NexusInterface/actions/runs/44010126853
-Windows: https://github.com/NamecoinGithub/NexusInterface/actions/runs/44015957572
+Linux: https://github.com/NamecoinGithub/NexusInterface/actions/runs/45917742607
+macOS: https://github.com/NamecoinGithub/NexusInterface/actions/runs/45917742563
+Windows: https://github.com/NamecoinGithub/NexusInterface/actions/runs/45917742568
