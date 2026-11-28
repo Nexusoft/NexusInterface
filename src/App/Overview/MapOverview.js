@@ -178,7 +178,7 @@ export default function MapOverview({ children }) {
   return <Dashboard aria-busy={!!waitingForPreview || !layoutReady}
     style={{ visibility: waitingForPreview || !layoutReady ? 'hidden' : 'visible' }}>
     <div className="summary">
-      <section className="card balance"><Icon icon={walletIcon} /><div><h2>{__('Total balance')}</h2><strong>{amount(total)} <em>NXS</em></strong>{connected && !synchronized && <small>{__('Balance may be out of date')}</small>}</div></section>
+      <section className="card balance"><Icon icon={walletIcon} /><div><h2>{__('Total balance')}</h2><strong>{amount(total)} <em>NXS</em></strong></div></section>
       <section className="card"><Icon icon={lockIcon} /><div><h2>{__('Login Status')}</h2><strong>{loggedIn ? __('Signed in') : __('Signed out')}</strong></div></section>
       <section className="card"><Icon className={connected && !synchronized ? 'syncing' : undefined} icon={synchronized && connected ? checkIcon : syncingIcon} /><div><h2>{__('Blockchain sync')}</h2><strong>{syncLabel}</strong></div></section>
       <section className="card"><Icon icon={peersIcon} /><div><h2>{__('Network peers')}</h2><strong>{count != null ? __('%{count} Connected', { count }) : '—'}</strong></div></section>

@@ -14,6 +14,10 @@ const Section = styled.div({
   textAlign: 'center',
 });
 
+const AboutHeader = styled(ControlledModal.Header)({
+  '&&': { textAlign: 'center' },
+});
+
 const openSourceCredits = [
   {
     Title: 'Electron',
@@ -56,11 +60,13 @@ const OpenSourceCreditsContainer = styled.div({
   gridTemplateRows: 'auto',
   gridGap: '1em 1em',
   textAlign: 'center',
+  '& dd': { margin: 0 },
 });
 
 const NexusLogo = styled(Icon)(({ theme }) => ({
   height: 80,
   width: 'auto',
+  maxWidth: '100%',
   display: 'inline-block',
   color: theme.primary,
 }));
@@ -70,7 +76,7 @@ const BusinessUnits = styled.div({
   marginRight: 'auto',
   display: 'grid',
   alignItems: 'center',
-  gridTemplateColumns: 'auto auto auto',
+  gridTemplateColumns: '1fr',
   gridTemplateRows: 'auto',
   gridGap: '1em',
   textAlign: 'center',
@@ -99,9 +105,9 @@ export default function About() {
   );
   return (
     <ControlledModal>
-      <ControlledModal.Header>
+      <AboutHeader>
         <NexusLogo icon={nexusLogo} />
-      </ControlledModal.Header>
+      </AboutHeader>
       <ControlledModal.Body>
         <div>
           <InfoField ratio={[1, 1]} label={__('Wallet version')}>
@@ -204,6 +210,18 @@ export default function About() {
                 </div>
               </div>
             ))}
+
+            <div>
+              <dt>3D Globe Terrain</dt>
+              <div>
+                Earth topology texture from{' '}
+                <ExternalLink href="https://github.com/vasturiano/three-globe/blob/master/example/img/earth-topology.png">
+                  three-globe
+                </ExternalLink>
+              </div>
+              <div>Copyright &copy; 2019 Vasco Asturiano &middot; MIT License</div>
+              <div>Used for terrain relief and elevation on the 3D globe.</div>
+            </div>
 
             <div className="mt1">
               <dt>MaxMind</dt>

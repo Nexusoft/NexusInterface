@@ -15,8 +15,8 @@ export default class Point {
     this.params = params || {};
     const width = this.params.mapLayout
       ? Math.max(2, 0.4 * this.params.peerConnections)
-      : 0.25 * this.params.peerConnections;
-    const height = (10 + 2 * this.params.peerConnections) * (this.params.mapLayout ? 1.5 : 1);
+      : 0.5 * this.params.peerConnections;
+    const height = (10 + 2 * this.params.peerConnections) * (this.params.mapLayout ? 1.5 : 1.4);
     const geometry = new THREE.BoxGeometry(
       width,
       height,

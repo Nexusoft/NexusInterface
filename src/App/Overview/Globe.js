@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import world from 'icons/world-light-white.jpg';
+import terrain from 'icons/earth-topology.png';
 import geoip from 'data/geoip';
 import Curve from './Curve';
 import Point from './Point';
@@ -112,7 +113,7 @@ export default class Globe extends Component {
       const globe = new THREE.Group();
       const sphere = this.props.mapLayout
         ? new THREE.PlaneGeometry(720, 360, 72, 36)
-        : new THREE.SphereGeometry(125, 50, 50);
+        : new THREE.SphereGeometry(125, 256, 128);
       const allPoints = new THREE.Group();
       const allArcs = new THREE.Group();
       allArcs.visible = !this.props.modern;
@@ -139,6 +140,13 @@ export default class Globe extends Component {
       controls.enabled = false;
       controls.update();
       scene.add(camera);
+      if (!this.props.mapLayout) {
+        scene.add(new THREE.AmbientLight(0xffffff, 0.45));
+        // Soft camera-relative lighting reveals terrain without overpowering peer pillars.
+        const sunlight = new THREE.DirectionalLight(0xffffff, 0.65);
+        sunlight.position.set(-200, 250, 350);
+        camera.add(sunlight);
+      }
 
       const importworld = new THREE.TextureLoader().load(world, (texture) => {
         if (this.unmounted) {
@@ -148,13 +156,42 @@ export default class Globe extends Component {
         mesh.visible = true;
       });
       importworld.anisotropy = 4;
-      const newWorld = this.props.mapLayout ? createPeerMapMaterial(importworld, this.props.mapColor || this.props.globeColor, this.props.mapGlowColor || this.props.archColor) : new THREE.MeshBasicMaterial({
+      const elevation = this.props.mapLayout ? null : new THREE.TextureLoader().load(terrain, texture => {
+        if (this.unmounted) texture.dispose();
+      });
+      if (elevation) {
+        elevation.wrapS = THREE.RepeatWrapping;
+        elevation.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+      }
+      const newWorld = this.props.mapLayout ? createPeerMapMaterial(importworld, this.props.mapColor || this.props.globeColor, this.props.mapGlowColor || this.props.archColor) : new THREE.MeshPhongMaterial({
         map: importworld,
+        bumpMap: elevation,
+        bumpScale: 3.5,
+        displacementMap: elevation,
+        displacementScale: 1.8,
+        displacementBias: -0.3,
+        shininess: 8,
+        specular: 0x080808,
         transparent: true,
         opacity: Color(this.props.globeColor).alpha(),
         depthWrite: Color(this.props.globeColor).alpha() === 1,
         color: Color(this.props.globeColor).hex(),
       });
+      if (!this.props.mapLayout) {
+        // The geographic mask has black land and white water. Lift land into
+        // the theme color so lighting can reveal valleys and mountain ridges.
+        newWorld.onBeforeCompile = shader => {
+          shader.fragmentShader = shader.fragmentShader.replace(
+            '#include <map_fragment>',
+            `#ifdef USE_MAP
+              vec4 geography = texture2D(map, vUv);
+              float land = 1.0 - smoothstep(0.35, 0.65, geography.r);
+              diffuseColor.rgb *= mix(0.12, 0.75, land);
+            #endif`
+          );
+        };
+        newWorld.customProgramCacheKey = () => 'globe-terrain-v5';
+      }
 
       const mesh = new THREE.Mesh(sphere, newWorld);
       // An unloaded sampler is black, which the map shader interprets as land.
@@ -164,7 +201,7 @@ export default class Globe extends Component {
       if (this.props.mapLayout) mesh.rotation.x = -Math.PI / 2;
       globe.add(mesh);
       const grid = new THREE.Mesh(
-        this.props.mapLayout ? new THREE.PlaneGeometry(720, 360, 36, 18) : new THREE.SphereGeometry(126, 36, 18),
+        this.props.mapLayout ? new THREE.PlaneGeometry(720, 360, 36, 18) : new THREE.SphereGeometry(126.6, 36, 18),
         new THREE.MeshBasicMaterial({
           color: Color(this.props.globeColor).hex(),
           wireframe: true,
@@ -328,6 +365,7 @@ export default class Globe extends Component {
       object.geometry?.dispose();
       if (object.material) {
         object.material.map?.dispose();
+        object.material.bumpMap?.dispose();
         object.material.dispose();
       }
     });
